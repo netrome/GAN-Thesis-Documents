@@ -19,6 +19,6 @@
 
 ## Promising results
 - Karras, Tero, et al. "Progressive growing of gans for improved quality, stability, and variation." arXiv preprint arXiv:1710.10196 (2017).
-- **Spectral normalization (not found on scholar, seens to still be under review): https://openreview.net/forum?id=B1QRgziT-**
+- **Miyato, Takeru, et al. "Spectral Normalization for Generative Adversarial Networks."**
 
 
