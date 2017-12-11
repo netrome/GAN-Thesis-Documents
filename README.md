@@ -8,7 +8,7 @@
 - **Lucic, Mario, et al. "Are GANs Created Equal? A Large-Scale Study." arXiv preprint arXiv:1711.10337 (2017).**
 
 ## Image-to-image models
- -**Isola, Phillip, et al. "Image-to-image translation with conditional adversarial networks." arXiv preprint arXiv:1611.07004 (2016).**
+ - **Isola, Phillip, et al. "Image-to-image translation with conditional adversarial networks." arXiv preprint arXiv:1611.07004 (2016).**
  - Zhu, Jun-Yan, et al. "Unpaired image-to-image translation using cycle-consistent adversarial networks." arXiv preprint arXiv:1703.10593 (2017).
  - Shrivastava, Ashish, et al. "Learning from simulated and unsupervised images through adversarial training." arXiv preprint arXiv:1612.07828 (2016).
  - Zhu, Jun-Yan, et al. "Toward Multimodal Image-to-Image Translation." arXiv preprint arXiv:1711.11586 (2017).
