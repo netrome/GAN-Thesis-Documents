@@ -21,4 +21,5 @@
 - Karras, Tero, et al. "Progressive growing of gans for improved quality, stability, and variation." arXiv preprint arXiv:1710.10196 (2017).
 - **Miyato, Takeru, et al. "Spectral Normalization for Generative Adversarial Networks."**
 
-
+# Project plan
+Right now I have no better place to write this so I'll do it here. Due to the long time consumption of the experiments I propose focusing on two things with two corresponding large-scale experiments. Progressive growing and triple-GAN. Firstly i will design a new training framework with these constellations in mind, thereafter I will test how well the progressive-growing works. When this have been tested I will focus on smaller rapid experiments on low-resolution images for a while to manage randomness and variation as well as getting the triple-GAN constellation to work properly. When this have beem performed I will scale up for a large experiment resulting in a high-resolution GAN.
