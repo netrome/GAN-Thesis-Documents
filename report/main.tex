@@ -7,13 +7,13 @@
 \addbibresource{references.bib} % The file containing our references, in BibTeX format
 
 
-\title{This is the English title}
-\alttitle{Detta är den svenska översättningen av titeln}
-\author{Osquar Student}
-\email{osquar@kth.se}
-\supervisor{Lotta Larsson}
-\examiner{Lennart Bladgren}
-\programme{Master in Computer Science}
+\title{Synthetic Data Generation using Conditional Generative Adversarial Networks}
+\alttitle{Syntetisk datagenerering genom betingade generativa adversiella nätverk}
+\author{Mårten Nilsson}
+\email{marten3@kth.se}
+\supervisor{Josephine Sullivan}
+\examiner{Hedvig Kjellström}
+\programme{Master in Machine Learning}
 \school{School of Computer Science and Communication}
 \date{\today}
 
@@ -50,24 +50,23 @@
 % Mainmatter is where the actual contents of the thesis goes
 \mainmatter
 
+% Here's my thesis ---------------------------------------------------------------------------------------
 
 \chapter{Introduction}
 
-We use the \emph{biblatex} package to handle our references.  We therefore use the
-command \texttt{parencite} to get a reference in parenthesis, like this
-\parencite{heisenberg2015}.  It is also possible to include the author
-as part of the sentence using \texttt{textcite}, like talking about
-the work of \textcite{einstein2016}.
+\input{chapters/intro.tex}
 
-\Blindtext
-
-\section{Research Question}
-
-\blindtext
+\chapter{Background}
 
 \chapter{Methods}
 
-\blindtext
+\input{chapters/methods.tex}
+
+\chapter{Results}
+
+\chapter{Discussion and conclusions}
+
+% --------------------------------------------------------------------------------------------------------
 
 \printbibliography[heading=bibintoc] % Print the bibliography (and make it appear in the table of contents)
 
