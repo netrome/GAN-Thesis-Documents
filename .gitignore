@@ -4,3 +4,6 @@
 *.pdf
 *.bbl
 *.blg
+*.bcf
+*.xml
+*.toc
