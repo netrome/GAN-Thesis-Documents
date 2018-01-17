@@ -1,5 +1,15 @@
 \section{Generative adversarial networks}
-Generative Adversarial Networks (GANs) is a framework for training generative models proposed by \textcite{goodfellow2014generative}. The framework consists of two neural networks, a generator $G$ and a discriminator $D$.The generator is a mapping between two domains $G: \mathcal{Z} \rightarrow \mathcal{X}$ where $\mathcal{Z}$ is a latent space.
+A \acrfull{gan} is a framework for training generative models proposed by \textcite{goodfellow2014generative}. The framework consists of a data domain $\mathcal{D}$ in some space $\mathcal{X}$, a latent space $\mathcal{Z}$ and two neural networks, a generator $G$ and a discriminator $D$. The generator is a mapping from $\mathcal{Z}$ to $\mathcal{X}$, $G: \mathcal{Z} \rightarrow \mathcal{X}$. The discriminator is a binary classifier $D: \mathcal{X} \rightarrow [0, 1]$. 
+
+The objective of the discriminator is to classify elements in $\mathcal{X}$ as either members or not members of $\mathcal{D}$. Members of $\mathcal{D}$ are usually referred to as real samples, and non-members as fake samples. The objective of the generator is to fool the discriminator by mapping elements in $\mathcal{Z}$ to the subspace of $\mathcal{X}$ that is classified as real. By introducing the adversarial loss function
+
+\begin{equation}
+    \mathcal{L}(x, z) = -log(D(x)) + log(D(G(z)))
+\end{equation}
+
+minimax stuff... todo
+
+
 
 \subsection{Variations on generative models}
 
