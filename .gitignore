@@ -8,3 +8,6 @@
 *.xml
 *.toc
 *.acn
+*.ist
+*.swp
+*_data*
