@@ -10,4 +10,5 @@
 *.acn
 *.ist
 *.swp
-*_data*
+_data
+litterature_repository
