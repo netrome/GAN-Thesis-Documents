@@ -1,0 +1,56 @@
+\definecolor{barblue}{RGB}{153,204,254}
+\definecolor{groupblue}{RGB}{51,102,254}
+\definecolor{linkred}{RGB}{165,0,33}
+\renewcommand\sfdefault{phv}
+\renewcommand\mddefault{mc}
+\renewcommand\bfdefault{bc}
+\setganttlinklabel{s-s}{START-TO-START}
+\setganttlinklabel{f-s}{FINISH-TO-START}
+\setganttlinklabel{f-f}{FINISH-TO-FINISH}
+\sffamily
+
+\begin{ganttchart}[
+    canvas/.append style={fill=none, draw=black!5, line width=.75pt},
+    hgrid style/.style={draw=black!5, line width=.75pt},
+    vgrid={*1{draw=black!5, line width=.75pt}},
+    %today=7,
+    %today rule/.style={
+    %  draw=black!64,
+    %  dash pattern=on 3.5pt off 4.5pt,
+    % width=1.5pt
+    %},
+    %today label font=\small\bfseries,
+    title/.style={draw=none, fill=none},
+    title label font=\bfseries\footnotesize,
+    title label node/.append style={below=7pt},
+    include title in canvas=false,
+    bar label font=\mdseries\small\color{black!70},
+    bar label node/.append style={left=2cm},
+    bar/.append style={draw=none, fill=black!63},
+    bar incomplete/.append style={fill=barblue},
+    bar progress label font=\mdseries\footnotesize\color{black!70},
+    group incomplete/.append style={fill=groupblue},
+    group left shift=0,
+    group right shift=0,
+    group height=.3,
+    group peaks tip position=0,
+    group label node/.append style={left=.6cm},
+    group progress label font=\bfseries\small,
+    link/.style={-latex, line width=1.5pt, linkred},
+    link label font=\scriptsize\bfseries,
+    link label node/.append style={below left=-2pt and 0pt}
+  ]{3}{23}
+  \gantttitle[
+    title label node/.append style={below left=7pt and -3pt}
+  ]{WEEKS:\quad3}{1}
+  \gantttitlelist{4,...,23}{1} \\
+  \ganttgroup{Litterature study}{3}{5} \\
+  \ganttbar[name=PREwrite]{Write background}{4}{5} \\
+  \ganttmilestone{Submit prestudy}{5} \\
+  \ganttgroup{Experiments}{4}{14} \\
+  \ganttgroup{Experiments}{4}{14} \\
+  \ganttgroup[progress=0]{WBS 2 Summary Element 2}{4}{10} \\
+  \ganttbar[progress=0]{\textbf{WBS 2.1} Activity E}{4}{5} \\
+  \ganttbar[progress=0]{\textbf{WBS 2.2} Activity F}{6}{8} \\
+  \ganttbar[progress=0]{\textbf{WBS 2.3} Activity G}{9}{10}
+\end{ganttchart}
