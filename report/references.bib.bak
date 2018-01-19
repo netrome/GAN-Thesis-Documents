@@ -154,6 +154,7 @@
   journal = {arXiv preprint arXiv:1701.00160},
   year    = {2016},
   file    = {:/home/tobii.intra/mnin/Documents/2016_GAN_NIPS_tutorial.pdf:PDF},
+  groups  = {GAN theory},
 }
 
 @Article{shuac2017acganisbad,
