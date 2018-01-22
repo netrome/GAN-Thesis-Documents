@@ -13,9 +13,15 @@
 \makeglossaries
 \newacronym{gan}{GAN}{Generative Adversarial Network}
 \newacronym{gans}{GANs}{Generative Adversarial Networks}
+\newacronym{vae}{VAE}{Variational Autoencoder}
+\newacronym{vaes}{VAEs}{Variational Autoencoders}
 \newacronym{mse}{MSE}{Mean Squared Error}
 % --------------------------------------------------
-
+% Own commands ---------
+\newcommand{\ve}[1]{\mathbf{#1}}
+\newcommand{\dataset}{S}
+\newcommand{\latentspace}{Z}
+% ----------------------
 
 \title{Semi-supervised semantic segmentation using progressive triple generative adversarial neural networks}
 \alttitle{Syntetisk datagenerering genom betingade generativa adversiella nätverk}
@@ -69,8 +75,8 @@ Motivation: Data compresion, can express data sets with smaller space requiremen
 
 \input{chapters/intro.tex}
 
-\chapter{Background}
 
+\chapter{Background}
 \input{chapters/prestudy.tex}
 
 \chapter{Methods}
@@ -80,7 +86,9 @@ Modelling partially annotated data: Triple-GAN.
 
 \chapter{Results}
 
-\chapter{Discussion and conclusions}
+\chapter{Discussion}
+
+\chapter{Conclusion}
 
 % --------------------------------------------------------------------------------------------------------
 
@@ -88,6 +96,6 @@ Modelling partially annotated data: Triple-GAN.
 
 \appendix
 
-\chapter{Unnecessary Appended Material}
+\chapter{Lots of images here}
 
 \end{document}

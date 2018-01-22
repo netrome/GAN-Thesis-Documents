@@ -200,6 +200,8 @@
   booktitle = {Advances in Neural Information Processing Systems},
   year      = {2014},
   pages     = {3581--3589},
+  file      = {:/home/tobii.intra/mnin/Documents/2014_NIPS_5352-semi-supervised-learning-with-deep-generative-models.pdf:PDF},
+  groups    = {Semi-supervised learning},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
