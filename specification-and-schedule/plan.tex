@@ -4,9 +4,9 @@
 \renewcommand\sfdefault{phv}
 \renewcommand\mddefault{mc}
 \renewcommand\bfdefault{bc}
-\setganttlinklabel{s-s}{START-TO-START}
-\setganttlinklabel{f-s}{FINISH-TO-START}
-\setganttlinklabel{f-f}{FINISH-TO-FINISH}
+\setganttlinklabel{s-s}{}
+\setganttlinklabel{f-s}{}
+\setganttlinklabel{f-f}{}
 \sffamily
 
 \begin{ganttchart}[
@@ -36,21 +36,43 @@
     group peaks tip position=0,
     group label node/.append style={left=.6cm},
     group progress label font=\bfseries\small,
-    link/.style={-latex, line width=1.5pt, linkred},
-    link label font=\scriptsize\bfseries,
-    link label node/.append style={below left=-2pt and 0pt}
+    %link/.style={-latex, line width=1.5pt, linkred},
+    %link label font=\scriptsize\bfseries,
+    %link label node/.append style={below left=-2pt and 0pt}
   ]{3}{23}
   \gantttitle[
     title label node/.append style={below left=7pt and -3pt}
   ]{WEEKS:\quad3}{1}
   \gantttitlelist{4,...,23}{1} \\
-  \ganttgroup{Litterature study}{3}{5} \\
-  \ganttbar[name=PREwrite]{Write background}{4}{5} \\
-  \ganttmilestone{Submit prestudy}{5} \\
+  \ganttgroup{Litterature study}{3}{11} \\
+  \ganttbar[name=LITmain]{Main prestudy}{3}{5} \\
+  \ganttmilestone[name=PREstone]{Prestudy submitted}{5} \\
+  \ganttbar[name=LITcomp]{Complementary reading}{6}{11} \\
   \ganttgroup{Experiments}{4}{14} \\
-  \ganttgroup{Experiments}{4}{14} \\
-  \ganttgroup[progress=0]{WBS 2 Summary Element 2}{4}{10} \\
-  \ganttbar[progress=0]{\textbf{WBS 2.1} Activity E}{4}{5} \\
-  \ganttbar[progress=0]{\textbf{WBS 2.2} Activity F}{6}{8} \\
-  \ganttbar[progress=0]{\textbf{WBS 2.3} Activity G}{9}{10}
+  \ganttbar[name=EXPfull]{Complete data sets}{4}{6} \\
+  \ganttbar[name=EXPpartial]{Partially annotated data sets}{7}{9} \\
+  \ganttbar[name=EXPcomplementary]{Complementary experiments}{10}{14} \\
+  \ganttmilestone[name=EXPresults]{Results collected}{14} \\
+  \ganttgroup{Report}{4}{23} \\
+  \ganttbar[name=PREwrite]{Introduction/Background draft}{4}{5} \\
+  \ganttbar[name=REPbak]{Introduction/Background complement}{6}{11} \\
+  \ganttbar[name=EXPwrite]{Method/Results}{8}{14} \\
+  \ganttbar[name=REPdiscussion]{Discussion/conclusion}{15}{17} \\
+  \ganttmilestone[name=REPdraft]{Draft + self evaluation}{17} \\
+  \ganttbar[name=tune]{Fine-tuning}{18}{21} \\
+  \ganttbar[name=present]{Presentation}{21}{22} \\
+  \ganttbar[name=adjust]{Final adjustments}{22}{23} \\
+  \ganttmilestone[name=REPfinal]{Final report submitted}{23} \\
+  %-----------------------------------
+  \ganttlink{PREwrite}{PREstone}
+  \ganttlink{EXPfull}{EXPpartial}
+  \ganttlink{EXPpartial}{EXPcomplementary}
+  \ganttlink{EXPcomplementary}{EXPresults}
+  \ganttlink{REPdraft}{tune}
+  \ganttlink{tune}{present}
+  \ganttlink{present}{adjust}
+  \ganttlink{adjust}{REPfinal}
+  \ganttlink{EXPwrite}{REPdiscussion}
+  %---
+  \ganttlink{LITmain}{PREstone}
 \end{ganttchart}
