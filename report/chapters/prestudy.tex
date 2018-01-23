@@ -2,7 +2,7 @@
 
 
 \section{\acrlong{gans}}
-\acrfull{gans} are a family generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $X$, a latent space $\latentspace$ and two neural networks, a generator $G$ and a discriminator $D$. The generator is a mapping from $\latentspace$ to $X$, $G: \latentspace \rightarrow X$. The discriminator is a binary classifier $D: X \rightarrow [0, 1]$. 
+\acrfull{gans} are a family generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $X$, a latent space $\latentspace$ and two neural networks, a generator $G$ and a discriminator $D$. The generator maps elements of $\latentspace$ to $X$, $G: \latentspace \rightarrow X$. The discriminator is a binary classifier $D: X \rightarrow [0, 1]$. 
 
 The objective of the discriminator is to classify elements in $X$ as either members or not members of $\dataset$. Members of $\dataset$ are usually referred to as real samples since they are part of the data set, and non-members are referred to as fake samples. The objective of the generator is to fool the discriminator by mapping elements in $\latentspace$ to the subspace of $X$ that is classified as real. 
 
@@ -13,13 +13,32 @@ The generator can bee viewed as representing a probability distribution $p_G$ on
 where $J^D(G, D)$ is the discriminator cost function from \parencite{goodfellow2016nips},
 \begin{equation}
     J^D(G, D) = -\frac{1}{2}\mathbb{E}_{x \sim p_\dataset, z \sim p_\latentspace}\left[\log(D(x)) - \log(1 - D(G(z))) \right].
+    \label{eq:GANcost}
 \end{equation}
 %\begin{equation}
 %    \mathcal{L}(x_1, x_2) = -\log(D(x)) + \log(D(x_2)), \quad \begin{cases} x \in X \\ z \in \latentspace \end{cases}.
 %\end{equation}
+Since both the generator and discriminator are differentiable functions, (\ref{eq:GANcost}) can be optimized using standard gradient based optimization schemes such as RMSprop \parencite{tieleman2012lecture} or Adam \parencite{kingma2014adam}. Typically the networks are updated in an alternating fashion where the parameters of one of the networks are frozen while updating the other network. The expectectations in (\ref{eq:GANcost}) are typically estimated using minibatches as 
+\begin{equation}
+    \mathbb{E}_{x\sim p(x)}[f(x)] \approx \frac{1}{m}\sum_{i=1}^mf(x_i)
+\end{equation}
+where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic fashion in Algorithm \ref{alg:GANbase}.
 
+\begin{algorithm}
+    \caption{Training scheme for \acrlong{gans}}
+  \label{alg:GANbase}
+  \begin{algorithmic}[1]
+    \STATE operation 0 \label{op0}
+    \STATE operation 1 \label{op1}
+  \end{algorithmic}
+\end{algorithm}
 
-\subsection{\acrshort{gan} variations}
+\subsection{Convergence of GANs}
+Convergence analysis from original paper goes here, together with some comments from other papers regarding divergence measure and stuff.
+
+\subsection{\acrshort{gan} variants}
+Just write the variations here in plain text.
+\subsubsection{NSGAN} Non-saturating GAN.
 \subsubsection{BiGAN}
 Can utilize the latent space.
 \subsubsection{ACGAN}
@@ -35,9 +54,9 @@ Another popular family of generative models besides \acrshort{gans} are \acrfull
 \section{Semi-supervised learning}
 Formulate problem, go through some apporaches.
 
-Improved GAN, go through vanilla version and combination with self training
+Improved GAN, go through vanilla version and combination with self training \cite{wuliu2017selftrainsemisup}
 
-\section{Image-to-image transforms}
+\section{Image-to-Image Models}
 
 \section{Common architectures}
 

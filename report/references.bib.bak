@@ -204,7 +204,7 @@
   groups    = {Semi-supervised learning, VAE theory},
 }
 
-@Article{DBLP:journals/corr/abs-1710-10313,
+@Article{wuliu2017selftrainsemisup,
   author        = {Alan Do{-}Omri and Dalei Wu and Xiaohua Liu},
   title         = {A Self-Training Method for Semi-Supervised GANs},
   journal       = {CoRR},
@@ -240,6 +240,23 @@
   organization = {IEEE},
   file         = {:/home/tobii.intra/mnin/Documents/2012_IEEE_zhou_self_training_with_selection_by_rejection.pdf:PDF},
   groups       = {Semi-supervised learning},
+}
+
+@Article{tieleman2012lecture,
+  author  = {Tieleman, Tijmen and Hinton, Geoffrey},
+  title   = {Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude},
+  journal = {COURSERA: Neural networks for machine learning},
+  year    = {2012},
+  volume  = {4},
+  number  = {2},
+  pages   = {26--31},
+}
+
+@Article{kingma2014adam,
+  author  = {Kingma, Diederik and Ba, Jimmy},
+  title   = {Adam: A method for stochastic optimization},
+  journal = {arXiv preprint arXiv:1412.6980},
+  year    = {2014},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
