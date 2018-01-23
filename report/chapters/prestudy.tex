@@ -1,18 +1,23 @@
 \section{Concepts and Terminology}
+This section deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
 
 
 \section{\acrlong{gans}}
-\acrfull{gans} are a family generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $X$, a latent space $\latentspace$ and two neural networks, a generator $G$ and a discriminator $D$. The generator maps elements of $\latentspace$ to $X$, $G: \latentspace \rightarrow X$. The discriminator is a binary classifier $D: X \rightarrow [0, 1]$. 
+\acrfull{gans} are a family generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $\dataspace$, a latent space $\latentspace$ and two neural networks, a generator $G(z)$ and a discriminator $D(x)$. The generator maps elements of $\latentspace$ to $\dataspace$, $G: \latentspace \rightarrow \dataspace$. The discriminator is a binary classifier $D: \dataspace \rightarrow [0, 1]$. 
 
-The objective of the discriminator is to classify elements in $X$ as either members or not members of $\dataset$. Members of $\dataset$ are usually referred to as real samples since they are part of the data set, and non-members are referred to as fake samples. The objective of the generator is to fool the discriminator by mapping elements in $\latentspace$ to the subspace of $X$ that is classified as real. 
+The objective of the discriminator is to classify elements in $\dataspace$ as either members or not members of $\dataset$. Members of $\dataset$ are usually referred to as real samples since they are part of the data set, and non-members are referred to as fake samples. The objective of the generator is to fool the discriminator by mapping elements in $\latentspace$ to the subspace of $\dataspace$ that is classified as real. 
 
-The generator can bee viewed as representing a probability distribution $p_G$ on $X$ according to $p_G(x) = p_\latentspace(G^{-1}(x))$, assuming a distribution $p_\latentspace$ on $\latentspace$. In practice $G^{-1}$ is intractable to compute, whereby explicit probabilities are seldom acquired through \acrshort{gans}. Moreover, the elements of $\dataset$ can be seen as outcomes of a probability distribution $p_\dataset$ corresponding to the probability of the occurence of a specific data point. Using this formulation the objective of the \acrshort{gan} training can be formulated as a minimax game 
+The generator can bee viewed as representing a probability distribution $p_G$ on $\dataspace$. By introducing a latent random variable $Z$ with the probability distribution $p_Z$ on $\latentspace$, the generator probability distribution can be expressed as $p_G(x) = p_Z(G^{-1}(x))$. 
+
+In practice $G^{-1}$ is intractable to compute, whereby explicit probabilities are seldom acquired through \acrshort{gans}. However, this formulation allows sampling from the learned distribution as $G(z), z \sim p_Z$ is straightforward to compute. 
+
+The goal of training \acrshort{gans} is to learn a probability distribution over the data. By viewing the elements of $\dataset$ as outcomes of a random variable $S$ with probability distribution $p_S$ the goal of the generator is to approximate this distribution with $p_G$, and the goal of the discriminator is to discriminate between these distributions. Using this formulation the objective of the \acrshort{gan} training can be formulated as a minimax game 
 \begin{equation}
     \min_D \max_G J^{D}(G, D)
 \end{equation}
 where $J^D(G, D)$ is the discriminator cost function from \parencite{goodfellow2016nips},
 \begin{equation}
-    J^D(G, D) = -\frac{1}{2}\mathbb{E}_{x \sim p_\dataset, z \sim p_\latentspace}\left[\log(D(x)) - \log(1 - D(G(z))) \right].
+    J^D(G, D) = -\frac{1}{2}\mathbb{E}_{x \sim p_S, z \sim p_Z}\left[\log(D(x)) - \log(1 - D(G(z))) \right].
     \label{eq:GANcost}
 \end{equation}
 %\begin{equation}
@@ -49,7 +54,22 @@ Generates nice images. \textcite{odena2016conditional} Distribution is skewed. \
 \subsubsection{Progressive GAN}
 
 \section{\acrlong{vaes}}
-Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. The model consists of an i.i.d. data set $\dataset$ and a continous latent space $\latentspace$. Each data point $\ve{x} \in \dataset$ 
+Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
+
+These models consists of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p_Z$ and likelihood $p_{S|Z}$ are assumed to come from parametric families of distributions and the posterior $p_{Z|S}$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters.
+
+The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the best parameters for the approximate posterior. It is a type of approximate variational inference and consists of gradient based optimization of an estimatior of the variational lower bound of the likelihood (Verifiera att det är likelihood). In the original article the authors propose two estimators
+\begin{equation}
+    \begin{aligned}
+        \mathcal{L}^A = \frac{1}{L}\sum_{l=1}^L \log p_\theta (x^{(i)},z^{(i, l)}) - \log q_\phi (z^{(i, l)} | x^{(i)}) ), \\
+        \mathcal{L}^B = - D_{KL}(q_\phi (z | x^{(i)}) || p_\theta(z)) + \frac{1}{L}\sum_{l=1}^L \log p_\theta (x^{(i)},z^{(i, l)}).
+    \end{aligned}
+\end{equation}
+
+
+\subsection{Similarities with \acrshort{gans}}
+Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z
+
 
 \section{Semi-supervised learning}
 Formulate problem, go through some apporaches.
