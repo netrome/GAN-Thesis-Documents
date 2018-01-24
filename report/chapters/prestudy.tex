@@ -38,6 +38,13 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
   \end{algorithmic}
 \end{algorithm}
 
+\begin{figure}
+    \caption{An illustration of GANs}
+    \label{fig:GAN}
+    \centering
+    \includegraphics[width=0.3\textwidth]{banana.png}
+\end{figure}
+
 \subsection{Convergence of GANs}
 Convergence analysis from original paper goes here, together with some comments from other papers regarding divergence measure and stuff.
 
@@ -53,19 +60,46 @@ Generates nice images. \textcite{odena2016conditional} Distribution is skewed. \
 \subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
 
+\subsection{Difficulties when training GANs}
+They do not need to decrease a divergence at each step \textcite{fedus2017many}
+
+\subsection{Evaluating the performance of GANs}
+Are all GANs created equal? \textcite{lucic2017gans}
+
+Problem with inception score on AC-GAN \textcite{shuac2017acganisbad}
+
+
+
 \section{\acrlong{vaes}}
 Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
 
-These models consists of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p_Z$ and likelihood $p_{S|Z}$ are assumed to come from parametric families of distributions and the posterior $p_{Z|S}$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters.
+These models consists of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(X)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}.
 
-The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the best parameters for the approximate posterior. It is a type of approximate variational inference and consists of gradient based optimization of an estimatior of the variational lower bound of the likelihood (Verifiera att det är likelihood). In the original article the authors propose two estimators
+The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the optimal variational parameters. It is a type of approximate variational inference and consists of gradient based optimization of an estimatior of the variational lower bound of the marginal likelihood of the data under the current model. In the original article the authors propose the two estimators based on Monte Carlo estimates of expectations:
 \begin{equation}
     \begin{aligned}
-        \mathcal{L}^A = \frac{1}{L}\sum_{l=1}^L \log p_\theta (x^{(i)},z^{(i, l)}) - \log q_\phi (z^{(i, l)} | x^{(i)}) ), \\
-        \mathcal{L}^B = - D_{KL}(q_\phi (z | x^{(i)}) || p_\theta(z)) + \frac{1}{L}\sum_{l=1}^L \log p_\theta (x^{(i)},z^{(i, l)}).
+        \mathcal{L}^A = \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}) - \log q_\phi (Z=z^{(i, l)} | X=x^{(i)}) ), \\
+        \mathcal{L}^B = - D_{KL}(q_\phi (Z | X=x^{(i)}) || p_\theta(Z=z)) + \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}).
     \end{aligned}
 \end{equation}
 
+\begin{algorithm}
+    \caption{Training scheme for \acrlong{vaes}}
+  \label{alg:VAEbase}
+  \begin{algorithmic}[1]
+    \STATE operation 0 \label{op0}
+    \STATE operation 1 \label{op1}
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{figure}
+    \caption{Variational autoencoder}
+    \label{fig:VAE}
+    \centering
+    \includegraphics[width=0.3\textwidth]{banana.png}
+\end{figure}
+
+\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods as described in Algorithm \ref{alg:VAEbase}. An issue at the moment is that the lower bound estimates require sampling from the latent variable, which is a non-differentiable operation. \textcite{kingma2013auto} resolved this issue by introducing a reparametrization trick to enable gradients to flow through the sampling process. This is applied in Algorithm \ref{alg:VAEbase}, but will not be explained in detail in this report for brevity. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
 
 \subsection{Similarities with \acrshort{gans}}
 Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z

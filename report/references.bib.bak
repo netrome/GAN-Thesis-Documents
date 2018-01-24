@@ -231,7 +231,7 @@
   groups       = {Synthetic data},
 }
 
-@InProceedings{patki2016synthetic,
+@InProceedings{Zhou2012,
   author       = {Zhou, Yan and Kantarcioglu, Murat and Thuraisingham, Bhavani},
   title        = {Self-training with selection-by-rejection},
   booktitle    = {Data Mining (ICDM), 2012 IEEE 12th International Conference on},
@@ -257,6 +257,25 @@
   title   = {Adam: A method for stochastic optimization},
   journal = {arXiv preprint arXiv:1412.6980},
   year    = {2014},
+}
+
+@Article{doersch2016tutorial,
+  author  = {Doersch, Carl},
+  title   = {Tutorial on variational autoencoders},
+  journal = {arXiv preprint arXiv:1606.05908},
+  year    = {2016},
+  file    = {:/home/tobii.intra/mnin/Documents/2016_tutorial_on_variational_autoencoders.pdf:PDF},
+  groups  = {VAE theory},
+}
+
+@InProceedings{pu2016variational,
+  author    = {Pu, Yunchen and Gan, Zhe and Henao, Ricardo and Yuan, Xin and Li, Chunyuan and Stevens, Andrew and Carin, Lawrence},
+  title     = {Variational autoencoder for deep learning of images, labels and captions},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2016},
+  pages     = {2352--2360},
+  file      = {:/home/tobii.intra/mnin/Documents/2016_nips_variational_autoencoder_for_deep_learning_of_images_labels_and_captions.pdf:PDF},
+  groups    = {VAE theory, Semi-supervised learning},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
