@@ -45,16 +45,43 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
     \includegraphics[width=0.3\textwidth]{banana.png}
 \end{figure}
 
-\subsection{Convergence of GANs}
-Convergence analysis from original paper goes here, together with some comments from other papers regarding divergence measure and stuff.
+\subsection{Theoretical analysis of \acrshort{gans}}
+In the original paper \textcite{goodfellow2014generative} a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity.
 
-\subsection{\acrshort{gan} variants}
-Just write the variations here in plain text.
-\subsubsection{NSGAN} Non-saturating GAN.
+Firstly is proven that given a fixed generator $G$ the optimal discriminator is 
+\begin{equation}
+    D(x) = \frac{p_S(X=x)}{p_S(X=x) + p_G(X=x)}.
+\end{equation}
+A straightforward implication of this is that when $G$ is optimal, the optimal $D$ always output $0.5$ for all real and fake data points. In other words
+\begin{equation}
+    p_G \eqdist p_S \implies D(x) = 0.5 \; \forall x \sim p_G, p_S
+\end{equation}
+if $D$ and $G$ are optimal. Secondly, it is also proved in the original paper that given an optimal discriminator there exists aglobal maximum of the discriminator cost function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is proven.
+
+\subsection{Issues with \acrshort{gans}}
+The theoretical results indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing GANs in practice some issues emerge from using models of finite capacity. 
+
+Another issue encountered when implementing \acrshort{gans} in practice emerges from the limitations of representing a continous distribution with a finite data set. Even though the theoretical results guarantee $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the data set $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the data set. An example for this is using the generator as a proxy for the data set during training or evaluation of another neural network.
+
+\subsection{\acrshort{gan} variantions}
+Since the introduction of \acrshort{gans}, several variations and extensions have been proposed to overcome some of the original issues. A few of these are outlined in this section.
+
+\subsubsection{Non Saturating \acrshort{gan}} 
+An issue with training \acrshort{gans} on the original discriminator cost function \ref{eq:GANcost} is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. 
+
+\subsubsection{Conditional \acrshort{gan}}
+A limitation of the original framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
+
+
+\subsubsection{Auxiliary Classifier GAN}
+The Auxiliary Classifier GAN, proposed by \textcite{odena2016conditional}, is another approach of modelling conditional distributions with \acrshort{gans}. As in the normal conditional \acrshort{gan}, the generator recieves an outcome from both the latent variable $Z$ and the conditional variable $Y$ and generates a sample from this information. In this case the conditional variable is assumed to be a class label, but the approach is easily extendible. In contrast to the generator, the discriminator only recieves the generated sample without any class label. Instead, the discriminator simultaneously attempts to discriminate between real and fake images, as well as producing label class probabilities.
+
+In this framework, the generator is trained to simultaneously produce data points that yields confident correct class predictions at the same time as they are indistinguishable from the correct data points. This approach have been shown to generate images with state of the art Inception score at the time \parencite{odena2016conditional}.
+
+A problem with this constellation is that the generator is biased towards learning to generate images that can easily be classified. This means that the optimal discriminator doesn't necessarily provide $p_G \eqdist p_S$. It has been shown that the distribution bias introduced by this model causes the generator to completely avoid generating ones with serifs when trained on MNIST despite the high frequency of serifed ones in the data set \textcite{shuac2017acganisbad}.
+
 \subsubsection{BiGAN}
 Can utilize the latent space.
-\subsubsection{ACGAN}
-Generates nice images. \textcite{odena2016conditional} Distribution is skewed. \textcite{shuac2017acganisbad}.
 \subsubsection{WGAN}
 \subsubsection{BEGAN}
 \subsubsection{DRAGAN}
@@ -104,6 +131,7 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
 \subsection{Similarities with \acrshort{gans}}
 Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z
 
+Combination of VAE and GAN: VAEGAN. \textcite{LarsenSW15autoencodingbeyond}
 
 \section{Semi-supervised learning}
 Formulate problem, go through some apporaches.
