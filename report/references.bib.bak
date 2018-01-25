@@ -116,7 +116,7 @@
   journal = {arXiv preprint arXiv:1612.07828},
   year    = {2016},
   file    = {:/home/tobii.intra/mnin/Documents/2016_S+U.pdf:PDF},
-  groups  = {Image to image, Synthetic data},
+  groups  = {Image to image, Synthetic data, Eye tracking},
 }
 
 @Article{xiang2017effects,
@@ -311,6 +311,22 @@
   volume  = {2},
 }
 
+@Article{zhang2017mpiigaze,
+  author        = {Xucong Zhang and Yusuke Sugano and Mario Fritz and Andreas Bulling},
+  title         = {MPIIGaze: Real-World Dataset and Deep Appearance-Based Gaze Estimation},
+  journal       = {CoRR},
+  year          = {2017},
+  volume        = {abs/1711.09017},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, http://dblp.org},
+  biburl        = {http://dblp.org/rec/bib/journals/corr/abs-1711-09017},
+  eprint        = {1711.09017},
+  file          = {:/home/tobii.intra/mnin/Documents/2017_MPIIGaze_real_world_dataset_and_deep_appearance_based_gaze_estimation.pdf:PDF},
+  groups        = {Eye tracking},
+  timestamp     = {Sun, 03 Dec 2017 12:38:15 +0100},
+  url           = {http://arxiv.org/abs/1711.09017},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:
@@ -324,4 +340,5 @@
 1 StaticGroup:Semi-supervised learning\;0\;1\;\;\;\;;
 1 StaticGroup:Good pointers\;0\;1\;\;\;\;;
 1 StaticGroup:Synthetic data\;0\;1\;\;\;\;;
+1 StaticGroup:Eye tracking\;0\;1\;\;\;\;;
 }

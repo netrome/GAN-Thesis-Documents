@@ -75,10 +75,10 @@ Since the introduction of \acrshort{gans}, several variations and extensions hav
 \subsubsection{Non Saturating \acrshort{gan}} 
 An issue with training \acrshort{gans} on the original discriminator cost function (\ref{eq:GANcost}) is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. This cost is sometimes reffered to as the non saturating const function.
 
-The non saturating cost function preserves the fixed point dynamics of the original \acrshort{gan} formulation while at the same time permitting the generator to learn when the discriminator is confident. Due to this property, non saturating \acrshort{gans} are the 
+The non saturating cost function preserves the fixed point dynamics of the original \acrshort{gan} formulation while at the same time permitting the generator to learn when the discriminator is confident. Due to this property, non saturating \acrshort{gans} are the implementation used for the experiments in the original article.
 
 \subsubsection{Conditional \acrshort{gan}}
-A limitation of the original framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
+A limitation of the \acrshort{gan} framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
 
 
 \subsubsection{Auxiliary Classifier GAN}
@@ -91,12 +91,15 @@ A problem with this constellation is that the generator is biased towards learni
 \subsubsection{BiGAN}
 Can utilize the latent space.
 \subsubsection{WGAN}
+A popular alternative to traditional GAN training is the Wasserstein \acrshort{gan}. It was proposed n 2017 by \textcite{arjovsky2017wasserstein}.
+
 \subsubsection{BEGAN}
 \subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
 
 \subsection{Difficulties when training GANs}
-They do not need to decrease a divergence at each step \textcite{fedus2017many}
+Arjovsky showed that NSGAN generator has a weird objective given an optimal discriminator \textcite{arjovsky2017towards}.
+They do not need to decrease a divergence at each step \textcite{fedus2017many}.
 
 \subsection{Evaluating the performance of GANs}
 Are all GANs created equal? \textcite{lucic2017gans}
