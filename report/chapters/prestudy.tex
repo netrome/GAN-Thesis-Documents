@@ -46,9 +46,9 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
 \end{figure}
 
 \subsection{Theoretical analysis of \acrshort{gans}}
-In the original paper \textcite{goodfellow2014generative} a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity.
+In the original paper (\textcite{goodfellow2014generative}) a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity.
 
-Firstly is proven that given a fixed generator $G$ the optimal discriminator is 
+Firstly it is proven that given a fixed generator $G$ the optimal discriminator is 
 \begin{equation}
     D(x) = \frac{p_S(X=x)}{p_S(X=x) + p_G(X=x)}.
 \end{equation}
@@ -58,16 +58,24 @@ A straightforward implication of this is that when $G$ is optimal, the optimal $
 \end{equation}
 if $D$ and $G$ are optimal. Secondly, it is also proved in the original paper that given an optimal discriminator there exists aglobal maximum of the discriminator cost function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is proven.
 
-\subsection{Issues with \acrshort{gans}}
+\subsection{Practical issues}
 The theoretical results indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing GANs in practice some issues emerge from using models of finite capacity. 
+
+Training stability issues...
+
+Gradient descent not guaranteed convergence: "Previous approaches to GAN training have thus applied gradient descent on each player’s cost simultaneously, despite the lack of guarantee that this procedure will converge." \textcite{salimans2016improved}.
+
+Mode collapse...
 
 Another issue encountered when implementing \acrshort{gans} in practice emerges from the limitations of representing a continous distribution with a finite data set. Even though the theoretical results guarantee $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the data set $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the data set. An example for this is using the generator as a proxy for the data set during training or evaluation of another neural network.
 
-\subsection{\acrshort{gan} variantions}
+\subsection{Variantions}
 Since the introduction of \acrshort{gans}, several variations and extensions have been proposed to overcome some of the original issues. A few of these are outlined in this section.
 
 \subsubsection{Non Saturating \acrshort{gan}} 
-An issue with training \acrshort{gans} on the original discriminator cost function \ref{eq:GANcost} is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. 
+An issue with training \acrshort{gans} on the original discriminator cost function (\ref{eq:GANcost}) is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. This cost is sometimes reffered to as the non saturating const function.
+
+The non saturating cost function preserves the fixed point dynamics of the original \acrshort{gan} formulation while at the same time permitting the generator to learn when the discriminator is confident. Due to this property, non saturating \acrshort{gans} are the 
 
 \subsubsection{Conditional \acrshort{gan}}
 A limitation of the original framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
