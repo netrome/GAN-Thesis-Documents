@@ -327,6 +327,15 @@
   url           = {http://arxiv.org/abs/1711.09017},
 }
 
+@Article{arjovsky2017towards,
+  author  = {Arjovsky, Martin and Bottou, L{\'e}on},
+  title   = {Towards principled methods for training generative adversarial networks},
+  journal = {arXiv preprint arXiv:1701.04862},
+  year    = {2017},
+  file    = {:/home/tobii.intra/mnin/Documents/2017-01_towards_principled_methods_for_training_GANs.pdf:PDF},
+  groups  = {GAN theory},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:

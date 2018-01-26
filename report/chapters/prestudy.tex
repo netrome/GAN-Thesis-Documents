@@ -91,15 +91,24 @@ A problem with this constellation is that the generator is biased towards learni
 \subsubsection{BiGAN}
 Can utilize the latent space.
 \subsubsection{WGAN}
-A popular alternative to traditional GAN training is the Wasserstein \acrshort{gan}. It was proposed n 2017 by \textcite{arjovsky2017wasserstein}.
+A popular alternative to the original \acrshort{gan} is the Wasserstein \acrshort{gan}. It was proposed n 2017 by \textcite{arjovsky2017wasserstein}. The distinguishing feature of the Wasserstein \acrshort{gan} is that instead of minimizing the Jensen-Shannon divergence it minimizes the Wasserstein-1, or Earth-Mover EM, distance 
+\begin{equation}
+    W(p_S, p_G) = \inf_{\gamma \Pi (p_S, p_G)} \mathbb{E}_{(x, y) \sim \gamma} \left[|x-y|\right],
+\end{equation}
+where $\Pi(p_s, p_g)$ is the set of all joint distributions with $p_S$ and $p_G$ as marginals. \textcite{arjovsky2017wasserstein} illustrated that this is equivalent to minimizing the cost function
+\begin{equation}
+    W^{(D)}(D, G) = \mathbb{E}_{x\sim p_S}[D(x)] - \mathbb{E}_{z \sim p_Z}[D(G(z))],
+\end{equation}
+under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wasserstein} enforced Lipschitz smoothnes by clipping the weights of the discriminator. In subsequent works more sophisticated methods have been proposed such as gradient penalty \parencite{gulrajani2017improved}, weight normalization \parencite{NIPS2016_6114} and spectral normalization \parencite{miyato2017spectral}.
 
 \subsubsection{BEGAN}
 \subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
+\textcite{karras2017progressive} proposed a novel training methodology for \acrshort{gans} to address the stability and variability issues with these modelsi when trained to generate images. The proposed methodology regards the network architectures during training and can be combined with many of the other \acrshort{gan} variants seamlessly. Instead of training a fixed-size discriminator and generator it is proposed to progressively growing them during training by gradually increase the resolution of the training data. Since training on higher resolution images are much more difficult that on low resolution images, this method conceptually acts as recycling a simpler network as a sensible initialization for the next higher-resolution network. It can also be veiwed as a multi-step transfer learning process. This approach demonstrated high-quality diverse fake samples on a 1028x1028 version of the CELEBA (write this in better font) dataset. 
 
 \subsection{Difficulties when training GANs}
 Arjovsky showed that NSGAN generator has a weird objective given an optimal discriminator \textcite{arjovsky2017towards}.
-They do not need to decrease a divergence at each step \textcite{fedus2017many}.
+However, they do not need to decrease a divergence at each step \textcite{fedus2017many}.
 
 \subsection{Evaluating the performance of GANs}
 Are all GANs created equal? \textcite{lucic2017gans}
