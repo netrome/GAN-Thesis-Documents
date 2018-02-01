@@ -1,6 +1,8 @@
 \section{Concepts and Terminology}
-This section deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
+This chapter deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
 
+\section{Generative models}
+Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
 
 \section{\acrlong{gans}}
 \acrfull{gans} are a family generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $\dataspace$, a latent space $\latentspace$ and two neural networks, a generator $G(z)$ and a discriminator $D(x)$. The generator maps elements of $\latentspace$ to $\dataspace$, $G: \latentspace \rightarrow \dataspace$. The discriminator is a binary classifier $D: \dataspace \rightarrow [0, 1]$. 
@@ -77,6 +79,18 @@ An issue with training \acrshort{gans} on the original discriminator cost functi
 
 The non saturating cost function preserves the fixed point dynamics of the original \acrshort{gan} formulation while at the same time permitting the generator to learn when the discriminator is confident. Due to this property, non saturating \acrshort{gans} are the implementation used for the experiments in the original article.
 
+\subsubsection{DCGAN}
+In an attempt of brining the success of \acrfull{cnns} from supervised to unsupervised learning, \textcite{radfordMC152015} presented a set of architectural guidelines for designing \acrshort{gans} for image generation. They showed that their architectural guidelines resulted in improved quality of the generated samples compared to the state of the art at the time. The guidelines they presented are:
+
+\begin{itemize}
+    \item Use strided convolutions instead of pooling in discriminator. Upsample with fractional-strided convolutions in generator.
+    \item Apply batch normalization \parencite{ioffeS15batchnorm} in both networks.
+    \item Avoid fully connected hidden layers in deeper architectures.
+    \item Use ReLU as an activation function in generator and LeakyReLU in the discriminator.
+\end{itemize}
+
+Subsequent work have shown alternatives towards some of these guidelines. For an example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{xiang2017effects}, whereby alternative normalizations have been applied to achieve the desired effects \parencite{karras2017progressive, miyato2017spectral}.
+
 \subsubsection{Conditional \acrshort{gan}}
 A limitation of the \acrshort{gan} framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
 
@@ -105,6 +119,8 @@ under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wassers
 \subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
 \textcite{karras2017progressive} proposed a novel training methodology for \acrshort{gans} to address the stability and variability issues with these modelsi when trained to generate images. The proposed methodology regards the network architectures during training and can be combined with many of the other \acrshort{gan} variants seamlessly. Instead of training a fixed-size discriminator and generator it is proposed to progressively growing them during training by gradually increase the resolution of the training data. Since training on higher resolution images are much more difficult that on low resolution images, this method conceptually acts as recycling a simpler network as a sensible initialization for the next higher-resolution network. It can also be veiwed as a multi-step transfer learning process. This approach demonstrated high-quality diverse fake samples on a 1028x1028 version of the CELEBA (write this in better font) dataset. 
+
+Besides the progressive growing of \acrshort{gans}, \textcite{karras2017progressive} also suggest two improvements that can be applied on other variants as well. They propose weight equalization to address the issue of training deep networks with weights that have different dynamic range. They propose using a pixelwise normalization of the feature maps instead of batch normalization to prevent escalation of signal magnitudes between the networks.
 
 \subsection{Difficulties when training GANs}
 Arjovsky showed that NSGAN generator has a weird objective given an optimal discriminator \textcite{arjovsky2017towards}.
