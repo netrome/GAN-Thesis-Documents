@@ -1,3 +1,5 @@
+This chapter begins by establishing the notation and the concepts that are encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by an in-depth descriptions of the families of generative modells considered in this project. Finally the concept of semi-supervised learning is introduced.
+
 \section{Concepts and Terminology}
 %This chapter deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
 This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and set are written in mathcal ($\mathcal{Z}$), stochastic variables are written as uppercase letters ($Z$), vectors are written as lower case letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions.
@@ -5,13 +7,13 @@ This chapter deals with high dimensional spaces, stochastic variables, sets, vec
 \section{Generative models}
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.7\textwidth]{graphicalModel.pdf}
+    \includegraphics[width=0.5\textwidth]{graphicalModel.pdf}
     \caption{The directed graphical model representing the dependency between the latent variable $Z$ and the data variable $X$ in \acrshort{gans}. This is the same dependency structure as in GMMs and \acrshort{vaes}.}
     \label{fig:GANgraph}
 \end{figure}
 In this thesis, the term generative model refers to models that explicitly or implicitly represent the data distribution thereby allowing sampling from the modelled distribution. This is different from discriminative models which only model information that can be extracted from the data. 
 
-This thesis focuses on parametric generative models which gan be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models, Hidden Markov models, \acrlong{gans} and \acrlong{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
+This thesis focuses on parametric generative models which gan be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models, Hidden Markov models, \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
 
 %Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
 
@@ -76,7 +78,7 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
 \end{algorithm}
 
 
-\subsection{Theoretical analysis of \acrshort{gans}}
+\subsection{Theoretical properties of \acrshort{gans}}
 In the original paper (\textcite{goodfellow2014generative}) a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity.
 
 Firstly it is proven that given a fixed generator $G$ the optimal discriminator is 
@@ -92,13 +94,9 @@ if $D$ and $G$ are optimal. Secondly, it is also proved in the original paper th
 This means that one can observe convergence when training \acrshort{gans} by observing the discriminator output. When it saturates at $0.5$ for all generator samples and real samples the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
 
 \subsection{Practical issues}
-The theoretical results indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing GANs in practice some issues emerge from using models of finite capacity. 
+The theoretical properties indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing these models in practice some issues emerge from using models of finite capacity. 
 
-Training stability issues...
-
-Gradient descent not guaranteed convergence: "Previous approaches to GAN training have thus applied gradient descent on each player’s cost simultaneously, despite the lack of guarantee that this procedure will converge." \textcite{salimans2016improved}.
-
-Mode collapse...
+The two-player minimax formulation of the game results in a notoriously difficult training scenario. The update of one player may undo progress on the other player instead of moving towards Nash Equilibrium. Therefore regular gradient descent is not guaranteed to converge but can just as well get stuck in a stale orbit \textcite{salimans2016improved}. It is also common that the generator learns to represent a subset of the original data realistically while ignoring the vast majority of the data points, thereby collapsing to a specific "mode" of the data. This phenomenon is known as mode collapse.
 
 Another issue encountered when implementing \acrshort{gans} in practice emerges from the limitations of representing a continous distribution with a finite data set. Even though the theoretical results guarantee $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the data set $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the data set. An example for this is using the generator as a proxy for the data set during training or evaluation of another neural network.
 
@@ -129,13 +127,14 @@ A limitation of the \acrshort{gan} framework is that it does not allow external 
 \subsubsection{Auxiliary Classifier GAN}
 The Auxiliary Classifier GAN, proposed by \textcite{odena2016conditional}, is another approach of modelling conditional distributions with \acrshort{gans}. As in the normal conditional \acrshort{gan}, the generator recieves an outcome from both the latent variable $Z$ and the conditional variable $Y$ and generates a sample from this information. In this case the conditional variable is assumed to be a class label, but the approach is easily extendible. In contrast to the generator, the discriminator only recieves the generated sample without any class label. Instead, the discriminator simultaneously attempts to discriminate between real and fake images, as well as producing label class probabilities.
 
-In this framework, the generator is trained to simultaneously produce data points that yields confident correct class predictions at the same time as they are indistinguishable from the correct data points. This approach have been shown to generate images with state of the art Inception score at the time \parencite{odena2016conditional}.
+In this framework, the generator is trained to simultaneously produce data points that yields confident correct class predictions at the same time as they are indistinguishable from the correct data points. This approach have been shown to generate images with state of the art \acrshort{is} values at the time \parencite{odena2016conditional}.
 
-A problem with this constellation is that the generator is biased towards learning to generate images that can easily be classified. This means that the optimal discriminator doesn't necessarily provide $p_G \eqdist p_S$. It has been shown that the distribution bias introduced by this model causes the generator to completely avoid generating ones with serifs when trained on MNIST despite the high frequency of serifed ones in the data set \textcite{shuac2017acganisbad}.
+%A problem with this constellation is that the generator is biased towards learning to generate images that can easily be classified. This means that the optimal discriminator doesn't necessarily provide $p_G \eqdist p_S$. It has been shown that the distribution bias introduced by this model causes the generator to completely avoid generating ones with serifs when trained on MNIST despite the high frequency of serifed ones in the data set \textcite{shuac2017acganisbad}.
 
-\subsubsection{BiGAN}
-Can utilize the latent space.
-\subsubsection{WGAN}
+%\subsubsection{BiGAN}
+%Can utilize the latent space.
+
+\subsubsection{Wasserstein GAN}
 A popular alternative to the original \acrshort{gan} is the Wasserstein \acrshort{gan}. It was proposed n 2017 by \textcite{arjovsky2017wasserstein}. The distinguishing feature of the Wasserstein \acrshort{gan} is that instead of minimizing the Jensen-Shannon divergence it minimizes the Wasserstein-1, or Earth-Mover EM, distance 
 \begin{equation}
     W(p_S, p_G) = \inf_{\gamma \Pi (p_S, p_G)} \mathbb{E}_{(x, y) \sim \gamma} \left[|x-y|\right],
@@ -146,22 +145,23 @@ where $\Pi(p_s, p_g)$ is the set of all joint distributions with $p_S$ and $p_G$
 \end{equation}
 under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wasserstein} enforced Lipschitz smoothnes by clipping the weights of the discriminator. In subsequent works more sophisticated methods have been proposed such as gradient penalty \parencite{gulrajani2017improved}, weight normalization \parencite{NIPS2016_6114} and spectral normalization \parencite{miyato2017spectral}.
 
-\subsubsection{BEGAN}
-\subsubsection{DRAGAN}
+%\subsubsection{BEGAN}
+%\subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
 \textcite{karras2017progressive} proposed a novel training methodology for \acrshort{gans} to address the stability and variability issues with these modelsi when trained to generate images. The proposed methodology regards the network architectures during training and can be combined with many of the other \acrshort{gan} variants seamlessly. Instead of training a fixed-size discriminator and generator it is proposed to progressively growing them during training by gradually increase the resolution of the training data. Since training on higher resolution images are much more difficult that on low resolution images, this method conceptually acts as recycling a simpler network as a sensible initialization for the next higher-resolution network. It can also be veiwed as a multi-step transfer learning process. This approach demonstrated high-quality diverse fake samples on a 1028x1028 version of the CELEBA (write this in better font) dataset. 
 
 Besides the progressive growing of \acrshort{gans}, \textcite{karras2017progressive} also suggest two improvements that can be applied on other variants as well. They propose weight equalization to address the issue of training deep networks with weights that have different dynamic range. They propose using a pixelwise normalization of the feature maps instead of batch normalization to prevent escalation of signal magnitudes between the networks.
 
-\subsection{Difficulties when training GANs}
-Arjovsky showed that NSGAN generator has a weird objective given an optimal discriminator \textcite{arjovsky2017towards}.
-However, they do not need to decrease a divergence at each step \textcite{fedus2017many}.
+\subsection{Comparing the performance of different \acrshort{gans}}
+The goal of \acrshort{gans} is to model a target distribution and they are often trained on high-dimensional complex data sets. Due to the nature of this setup and the observation that explicit probabilities are unobtainable for both the true data distribution and the modeled distribution, these models are difficult to evaluate. Two popular quantitative measures for evaluating the performance of \acrshort{gans} are the \acrfull{is} and the \acrfull{fid} scores \parencite{heuselRUNKH2017FID}.
 
-\subsection{Evaluating the performance of GANs}
-Are all GANs created equal? \textcite{lucic2017gans}
+These measures have been shown to correspond to increased quality and diversity of generated samples but do still inherently suffer from the limitations imposed by the abscence of explicit probability distributions. For an example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that generator completely avoid generating ones with serifs despite the high frequency of serifed ones in the data set. This skew in data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original data set.
 
-Problem with inception score on AC-GAN \textcite{shuac2017acganisbad}
+In specific applications, the quality of the generated samples can be evaluated indirectly based on the application of the data. \textcite{shrivastava2016learning} used this approach to compare the quality of a generated data set against the real data alone for gaze estimation. This approach does not guarantee correspondence between visually pleasing samples and generated samples and does not allow the results to be compared with similar \acrshort{gans} in a different domain. However it is appealing in the sense that it brings the quantitative evaluation of the models closer to the targeted application. 
 
+Besides the difficulties in finding quantitative evaluation measures, \acrshort{gans} are vere sensitive to hyperparameter setting and it is difficult to assess if improved results are caused by better hyperparameters or improved methods. This was demonstrated in a recent work by \textcite{lucic2017gans}, where a large scale evaluation of some of the state-of-the-art variants was performed. It was observed that similar results could be obtained for all the models as a result of enough random restarts and hyperparameter optimization.
+
+In parallell with the empirical comparisons of different \acrshort{gans} theoretical arguments regarding the objective of these models are taking place. \textcite{arjovsky2017towards} introduced the divergence that the NSGAN minimizes, and argues why this causes mode collapse and convergence issues. The view on the training of \acrshort{gans} as minimization of a divergence have subsequently been critizised as overly restrictive, and empirical counterexamples have been presented to challenge this view \textcite{fedus2017many}.
 
 
 \section{\acrlong{vaes}}
@@ -186,31 +186,38 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
         \STATE sample minibatch of data points $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
         \STATE sample minibatch from the latent space $\{z_1, ..., z_m\} \sim p_\theta(z)$.
         \STATE update model parameters with gradients of any of the proposed estimators in equation \ref{eq:VAEstimators}.
-        \STATE TODO: Write the equations explicitly with reconstruction loss.
         \ENDFOR
     \end{algorithmic}
 \end{algorithm}
 
-\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods as described in Algorithm \ref{alg:VAEbase}. An issue at the moment is that the lower bound estimates require sampling from the latent variable, which is a non-differentiable operation. \textcite{kingma2013auto} resolved this issue by introducing a reparametrization trick to enable gradients to flow through the sampling process. This is applied in Algorithm \ref{alg:VAEbase}, but will not be explained in detail in this report for brevity. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
+\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods as described in Algorithm \ref{alg:VAEbase}. An issue with this approach is that the lower bound estimates require sampling from the latent variable, which is a non-differentiable operation. \textcite{kingma2013auto} resolved this issue by introducing a reparametrization trick to enable gradients to flow through the sampling process. This is applied in Algorithm \ref{alg:VAEbase}, but will not be explained in detail in this report for brevity. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
 
-\subsection{Similarities with \acrshort{gans}}
-Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z
+\subsection{Combining \acrshort{vaes} with \acrshort{gans}}
+Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generates samples from the prior of the latent variable and uses the discriminator network as an adversarial loss function on the generated samples. 
 
-Combination of VAE and GAN: VAEGAN. \textcite{LarsenSW15autoencodingbeyond}
+The similarity of these approaches allow different methods of combining the benefits of both approaches. The most straightforward approach of training a \acrshort{vae} with an adversarial loss function was performed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
 
 \section{Semi-supervised learning}
-Formulate problem, go through some apporaches.
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{supersemiun.pdf}
+    \caption{Levels of supervision in Machine Learning. Unsuperviesd algorithms are not dependent on labels and can therefore be applied on any type of data, whereas supervised algorithms require fully annotated data sets. Semi-supervised learning emerges as a middle ground between the two approaches.}
+    \label{fig:supersemiun}
+\end{figure}
+Supervised learning can be seen as the problem of learning from data that is structured in pairs of patterns ($x$) and labels ($y$), $S = {(x_1, y_1), ..., (x_n, y_n)}$. The task is then to predict the labels given the patterns. This transitions to semi-supervised learning when the training data does not necessarily contain labels for each pattern. The relations between the classes of supervision is illustrated in figure \ref{fig:supersemiun}. 
 
-Improved GAN, go through vanilla version and combination with self training \cite{wuliu2017selftrainsemisup}
+Methods for semi-supervised learning have shown success in improving the accuracy of supervised methods in settings where labeled data are limited \parencite{Zhou2012}. Generative models are well suited for semi-supervised learning, and several methods building on deep generative models have been proposed \parencite{kingma2014semi, salimans2016improved, springenberg2015unsupervised, wuliu2017selftrainsemisup, li2017triple}.
 
-\section{Image-to-Image Models}
+A common method for semi-supervised learning is self training. Self training is based on computing estimates of the missing labels which subsequently are reused for training the network. An interesting instance of self training when considering \acrshort{gans} is the triple \acrshort{gan}, which is a conditional \acrshort{gan} where the generator network is accompanied by a classifier network, which predicts the labels given the data. This network is also trained with and adversarial loss, at the same time as it is used to generate annotations for the generator. This constellation allows the networks to be trained on large amounts of unlabeled data when the classifier converges faster than the generator, which normally is the case.
 
-\section{Common architectures}
+%\section{Image-to-Image Models}
 
-\section{Normalization techniques}
+%\section{Common architectures}
 
-\section{Related work}
-Hmm, värt att nämna? 
+%\section{Normalization techniques}
+
+%\section{Related work}
+%Hmm, värt att nämna? 
 
 
 
