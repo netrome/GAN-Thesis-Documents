@@ -1,9 +1,20 @@
-Establish the context and importance of the topic in this text.
+%Establish the context and importance of the topic in this text.
 
-\section{Motivation for synthetic data generation}
-Synthetic data sets \textcite{patki2016synthetic}. Self training in semi-supervised learning \cite{wuliu2017selftrainsemisup}. And more.
+This degree project is being carried out within the field of deep learning and generative modeling. \acrlong{gans} were first introduced by \textcite{goodfellow2014generative} in 2014 as a method of generating realistic samples of a data distribution. The state-of-the-art \acrshort{gans} of today are capable of generating diverse sets of high resolution images \cite{karras2017progressive}. Adversarial methods have also been shown to improve existing data sets for gaze estimation \cite{shrivastava2016learning}. A big interest in researching \acrshort{gans} emerges from the unsupervised nature of the method. By utilizing \acrshort{gans} large unannotated data sets can be leveraged to boost existing models. An example of this is using \acrshort{gans} semi-supervised learning as proposed by Goodfellow et al. in the original article \cite{goodfellow2014generative}.
+
+The desired outcome of the project is to produce a variant of a GAN capable of
+generating data sets with improved annotations in comparison to the original data
+set. The term Improved in this context applies
+both to the quality and the quantity of the annotations.
 
 \section{Problem statement}
+\subsection{The question}
+Can current techniques for training GANs be used to train a network to generate a synthetic data set from
+an existing source of data in such a way that models trained on the synthetic
+data set perform better than the same models when trained on real data?
+
+\section{Motivation for synthetic data generation}
+Synthetic data sets \textcite{patki2016synthetic}. Self training in semi-supervised learning \parencite{wuliu2017selftrainsemisup}. And more.
 
 \section{Scope and objectives}
 

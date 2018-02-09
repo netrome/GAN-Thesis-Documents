@@ -392,6 +392,32 @@
   author    = {Christopher, M Bishop},
 }
 
+@Article{heuselRUNKH2017FID,
+  author        = {Martin Heusel and Hubert Ramsauer and Thomas Unterthiner and Bernhard Nessler and G{\"{u}}nter Klambauer and Sepp Hochreiter},
+  title         = {GANs Trained by a Two Time-Scale Update Rule Converge to a Nash Equilibrium},
+  journal       = {CoRR},
+  year          = {2017},
+  volume        = {abs/1706.08500},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, http://dblp.org},
+  biburl        = {http://dblp.org/rec/bib/journals/corr/HeuselRUNKH17},
+  eprint        = {1706.08500},
+  timestamp     = {Mon, 03 Jul 2017 13:29:02 +0200},
+  url           = {http://arxiv.org/abs/1706.08500},
+}
+
+@InCollection{triangleNIPS2017_7109,
+  author    = {Gan, Zhe and Chen, Liqun and Wang, Weiyao and Pu, Yuchen and Zhang, Yizhe and Liu, Hao and Li, Chunyuan and Carin, Lawrence},
+  title     = {Triangle Generative Adversarial Networks},
+  booktitle = {Advances in Neural Information Processing Systems 30},
+  publisher = {Curran Associates, Inc.},
+  year      = {2017},
+  editor    = {I. Guyon and U. V. Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+  pages     = {5253--5262},
+  groups    = {Semi-supervised learning},
+  url       = {http://papers.nips.cc/paper/7109-triangle-generative-adversarial-networks.pdf},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:
