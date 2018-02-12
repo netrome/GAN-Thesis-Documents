@@ -1,13 +1,20 @@
 %Establish the context and importance of the topic in this text.
 
-This degree project is being carried out within the field of deep learning and generative modeling. \acrlong{gans} were first introduced by \textcite{goodfellow2014generative} in 2014 as a method of generating realistic samples of a data distribution. The state-of-the-art \acrshort{gans} of today are capable of generating diverse sets of high resolution images \cite{karras2017progressive}. Adversarial methods have also been shown to improve existing data sets for gaze estimation \cite{shrivastava2016learning}. A big interest in researching \acrshort{gans} emerges from the unsupervised nature of the method. By utilizing \acrshort{gans} large unannotated data sets can be leveraged to boost existing models. An example of this is using \acrshort{gans} semi-supervised learning as proposed by Goodfellow et al. in the original article \cite{goodfellow2014generative}.
+This degree project was carried out within the field of deep learning and generative modeling.
 
-The desired outcome of the project is to produce a variant of a GAN capable of
-generating data sets with improved annotations in comparison to the original data
-set. The term Improved in this context applies
-both to the quality and the quantity of the annotations.
+Generative models are essential for a wide range of applications within Data Science and Machine Learning such as... (Lägg in stuff här). Unlike discriminative models, generative models are capable of reproducing the phenomenon they are modelling enabling them to be used for synthetic data generation. This have been shown to be successful for low dimensional relational data \cite{patki2016synthetic}. 
+
+Until recently, there has been little progress in developing generative models that can scale beyond small low-dimensional data sets. Therefore the most refined generative models of today are intractable to apply on large high-dimensional data sets. Over the past few years however, major advances in deep learing have allowed a new class of generative models to emerge. Namely, deep generative models. (Övegång till GANs).
+
+
+\acrlong{gans} were first introduced by \textcite{goodfellow2014generative} in 2014 as a method of generating realistic samples of a data distribution. The state-of-the-art \acrshort{gans} of today are capable of generating diverse sets of high resolution images \cite{karras2017progressive}. Adversarial methods have also been shown to improve existing data sets for gaze estimation \cite{shrivastava2016learning}. A big interest in researching \acrshort{gans} emerges from the unsupervised nature of the method. By utilizing \acrshort{gans} large unannotated data sets can be leveraged to boost existing models. An example of this is using \acrshort{gans} semi-supervised learning as proposed by Goodfellow et al. in the original article \cite{goodfellow2014generative}.
+
+
+
 
 \section{Problem statement}
+This thesis intends to determine the extent to which deep generative models can act as a drop-in replacement for existing data sets. 
+
 \subsection{The question}
 Can current techniques for training GANs be used to train a network to generate a synthetic data set from
 an existing source of data in such a way that models trained on the synthetic
