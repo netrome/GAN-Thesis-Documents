@@ -13,11 +13,7 @@ This chapter deals with high dimensional spaces, stochastic variables, sets, vec
 \end{figure}
 In this thesis, the term generative model refers to models that explicitly or implicitly represent the data distribution thereby allowing sampling from the modelled distribution. This is different from discriminative models which only model information that can be extracted from the data. 
 
-<<<<<<< HEAD
 This thesis focuses on parametric generative models which gan be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
-=======
-This thesis focuses on parametric generative models which can be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models, Hidden Markov models, \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are computationally tractable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a casual dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
->>>>>>> 4886d906f95b333ed286f024e531f582fb58fd74
 
 %Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
 
@@ -131,11 +127,7 @@ A limitation of the \acrshort{gan} framework is that it does not allow external 
 \subsubsection{Auxiliary Classifier GAN}
 The Auxiliary Classifier GAN, proposed by \textcite{odena2016conditional}, is another approach of modelling conditional distributions with \acrshort{gans}. As in the normal conditional \acrshort{gan}, the generator recieves an outcome from both the latent variable $Z$ and the conditional variable $Y$ and generates a sample from this information. In this case the conditional variable is assumed to be a class label, but the approach is easily extendible. In contrast to the generator, the discriminator only recieves the generated sample without any class label. Instead, the discriminator simultaneously attempts to discriminate between real and fake images, as well as producing label class probabilities.
 
-<<<<<<< HEAD
 In this framework, the generator is trained to simultaneously produce data points that yields confident correct class predictions at the same time as they are indistinguishable from the correct data points. This approach have been shown to generate images with state of the art \acrlong{is} values at the time \parencite{odena2016conditional}.
-=======
-In this framework, the generator is trained to simultaneously produce data points that yields confident correct class predictions at the same time as they are indistinguishable from the correct data points. This approach has been shown to generate images with state of the art \acrshort{is} values at the time \parencite{odena2016conditional}.
->>>>>>> 4886d906f95b333ed286f024e531f582fb58fd74
 
 %A problem with this constellation is that the generator is biased towards learning to generate images that can easily be classified. This means that the optimal discriminator doesn't necessarily provide $p_G \eqdist p_S$. It has been shown that the distribution bias introduced by this model causes the generator to completely avoid generating ones with serifs when trained on MNIST despite the high frequency of serifed ones in the data set \textcite{shuac2017acganisbad}.
 
@@ -151,7 +143,7 @@ where $\Pi(p_s, p_g)$ is the set of all joint distributions with $p_S$ and $p_G$
 \begin{equation}
     W^{(D)}(D, G) = \mathbb{E}_{x\sim p_S}[D(x)] - \mathbb{E}_{z \sim p_Z}[D(G(z))],
 \end{equation}
-under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wasserstein} enforced Lipschitz smoothnes by clipping the weights of the discriminator. In subsequent works more sophisticated methods have been proposed such as gradient penalty \parencite{gulrajani2017improved}, weight normalization \parencite{NIPS2016\_6114} and spectral normalization \parencite{miyato2017spectral}.
+under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wasserstein} enforced Lipschitz smoothnes by clipping the weights of the discriminator. In subsequent works more sophisticated methods have been proposed such as gradient penalty \parencite{gulrajani2017improved}, weight normalization \parencite{NIPS2016weightnorm} and spectral normalization \parencite{miyato2017spectral}.
 
 %\subsubsection{BEGAN}
 %\subsubsection{DRAGAN}
@@ -171,11 +163,7 @@ where $p(Y|X)$ is the class conditional probability distribution obtained throug
 
 The \acrlong{fid} metric is a proposed improvement over the \acrlong{is}. Unlike the \acrlong{is}, the \acrlong{fid} metric measures the distance between the learned data distribution and the true distribution. It does so by computing the Frechét distance (Wasserstein-2 distance) between inception encodings of the true data distribution and the fake data distribution.
 
-<<<<<<< HEAD
 These measures have been shown to correspond to increased quality and diversity of generated samples but do still inherently suffer from the limitations imposed by the abscence of explicit probability distributions. For an example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that generator completely avoid generating ones with serifs despite the high frequency of serifed ones in the data set. This skew in data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original data set. Similar examples for the \acrshort{fid} have not been discovered during the course of this project. 
-=======
-These measures have been shown to correspond to increased quality and diversity of generated samples but do still inherently suffer from the limitations imposed by the abscence of explicit probability distributions. As an example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that the generator completely avoid generating ones with serifs despite the high frequency of serifed ones in the data set. This skew in the data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original data set.
->>>>>>> 4886d906f95b333ed286f024e531f582fb58fd74
 
 In specific applications, the quality of the generated samples can be evaluated indirectly based on the application of the data. \textcite{shrivastava2016learning} used this approach to compare the quality of a generated data set against the real data alone for gaze estimation. This approach does not guarantee correspondence between visually pleasing samples and generated samples and does not allow the results to be compared with similar \acrshort{gans} in a different domain. However it is appealing in the sense that it brings the quantitative evaluation of the models closer to the targeted application. 
 
@@ -229,13 +217,9 @@ Supervised learning can be seen as the problem of learning from data that is str
 
 Methods for semi-supervised learning have shown success in improving the accuracy of supervised methods in settings where labeled data are limited \parencite{Zhou2012}. Generative models are well suited for semi-supervised learning, and several methods building on deep generative models have been proposed \parencite{kingma2014semi, salimans2016improved, springenberg2015unsupervised, wuliu2017selftrainsemisup, li2017triple}.
 
-<<<<<<< HEAD
 A common method for semi-supervised learning is self training. Self training is based on computing estimates of the missing labels which subsequently are reused for training the network. An interesting instance of self training when considering \acrshort{gans} is the triple \acrshort{gan} \parencite{li2017triple}. The triple \acrshort{gan} is a conditional \acrshort{gan} where the generator network is accompanied by a classifier network, which predicts the labels given the data. This network is also trained with and adversarial loss, at the same time as it is used to generate annotations for the generator. This constellation allows the networks to be trained on large amounts of unlabeled data when the classifier converges faster than the generator, which normally is the case.
 
 The triple \acrshort{gan} is closesly related to the $\Delta$-\acrshort{gan} \parencite{triangleNIPS20177109} which also allows semi-supervised learning. The semi-supervised learning proposed for the $\Delta$-\acrshort{gan} is unlike the triple \acrshort{gan} not based on self training. Instead the objective function can be decomposed into a conditional part and a bidirectional part which can account for labeled and unlabeled data separately.
-=======
-A common method for semi-supervised learning is self training. Self training is based on computing estimates of the missing labels which subsequently are reused for training the network. An interesting instance of self training when considering \acrshort{gans} is the triple \acrshort{gan}, which is a conditional \acrshort{gan} where the generator network is accompanied by a classifier network, which predicts the labels given the data. This network is also trained with an adversarial loss, at the same time as it is used to generate annotations for the generator. This constellation allows the networks to be trained on large amounts of unlabeled data when the classifier converges faster than the generator, which normally is the case.
->>>>>>> 4886d906f95b333ed286f024e531f582fb58fd74
 
 %\section{Image-to-Image Models}
 

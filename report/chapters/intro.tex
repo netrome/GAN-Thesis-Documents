@@ -1,29 +1,27 @@
 %Establish the context and importance of the topic in this text.
 
-This degree project was carried out within the field of deep learning and generative modeling.
+%This degree project was carried out within the field of deep learning and generative modeling.
 
-Generative models are essential for a wide range of applications within Data Science and Machine Learning such as... (Lägg in stuff här). Unlike discriminative models, generative models are capable of reproducing the phenomenon they are modelling enabling them to be used for synthetic data generation. This have been shown to be successful for low dimensional relational data \cite{patki2016synthetic}. 
+Generative models are essential for a wide range of applications within Data Science and Machine Learning such as... (Lägg in stuff här). Unlike discriminative models, generative models are capable of reproducing the phenomenon they are modelling enabling them to be used for synthetic data generation. This have been shown to be successful for low dimensional relational data \cite{patki2016synthetic}. However achieving similar results on large high dimensional data sets have proven to be more challenging.
 
-Until recently, there has been little progress in developing generative models that can scale beyond small low-dimensional data sets. Therefore the most refined generative models of today are intractable to apply on large high-dimensional data sets. Over the past few years however, major advances in deep learing have allowed a new class of generative models to emerge. Namely, deep generative models. (Övegång till GANs).
-
+Until recently, there has been little progress in developing generative models that can scale beyond small low-dimensional data sets. Therefore the most refined generative models of today are intractable to apply on large high-dimensional data sets. The past few years have seen major advances in deep learing. These advances allowed a new class of scalable generative models to emerge. Namely, deep generative models. Of these models, a significant amount of attention have been directed at \acrfull{gans} which are capable of generate highly realistic samples of complicated data distributions.
 
 \acrlong{gans} were first introduced by \textcite{goodfellow2014generative} in 2014 as a method of generating realistic samples of a data distribution. The state-of-the-art \acrshort{gans} of today are capable of generating diverse sets of high resolution images \cite{karras2017progressive}. Adversarial methods have also been shown to improve existing data sets for gaze estimation \cite{shrivastava2016learning}. A big interest in researching \acrshort{gans} emerges from the unsupervised nature of the method. By utilizing \acrshort{gans} large unannotated data sets can be leveraged to boost existing models. An example of this is using \acrshort{gans} semi-supervised learning as proposed by Goodfellow et al. in the original article \cite{goodfellow2014generative}.
 
-
-
+A considerable amount of literature has been published on how to train \acrshort{gans}. These studies consider convergence issues related to training \acrshort{gans} and the quality of the generated sample. A search of the literature revealed few studies which attempts to train new networks on the generated samples. This project provides an important opportunity to advance the understanding of these possibilities.
 
 \section{Problem statement}
-This thesis intends to determine the extent to which deep generative models can act as a drop-in replacement for existing data sets. 
+This thesis intends to determine the extent to which deep generative models can act as a drop-in replacement for existing data sets. The question asked is
 
-\subsection{The question}
-Can current techniques for training GANs be used to train a network to generate a synthetic data set from
-an existing source of data in such a way that models trained on the synthetic
-data set perform better than the same models when trained on real data?
+\begin{itemize}
+    \item \textit{Can deep geberative models be applied to generate synthetic data sets in such a way that neural networks trained on the synthetic data set exhibits performance comparable to the performance of the same models when trained on real data?}
+\end{itemize}
 
-\section{Motivation for synthetic data generation}
-Synthetic data sets \textcite{patki2016synthetic}. Self training in semi-supervised learning \parencite{wuliu2017selftrainsemisup}. And more.
+%\section{Motivation for synthetic data generation}
+%Synthetic data sets \textcite{patki2016synthetic}. Self training in semi-supervised learning \parencite{wuliu2017selftrainsemisup}. And more.
 
 \section{Scope and objectives}
+This study is unable to encompass the entire field of deep generative models as well as all possible data sources. Therefore, this study examines the previously stated question by
 
 \section{Thesis overview}
 Chapter 2 provides and overview of \acrlong{gans} and related methods. The notation used throughout the thesis is establised in section 2.1. In Chapter 3, the method is presented etc...
