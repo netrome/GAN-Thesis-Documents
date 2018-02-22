@@ -336,7 +336,7 @@
   groups  = {GAN theory},
 }
 
-@InCollection{NIPS2016_6114,
+@InCollection{NIPS2016weightnorm,
   author    = {Salimans, Tim and Kingma, Diederik P},
   title     = {Weight Normalization: A Simple Reparameterization to Accelerate Training of Deep Neural Networks},
   booktitle = {Advances in Neural Information Processing Systems 29},
@@ -428,6 +428,24 @@
   pages     = {1486--1494},
   groups    = {GAN variations},
   url       = {http://papers.nips.cc/paper/5773-deep-generative-image-models-using-a-laplacian-pyramid-of-adversarial-networks.pdf},
+}
+
+@InProceedings{swirski2014rendering,
+  author       = {{\'S}wirski, Lech and Dodgson, Neil},
+  title        = {Rendering synthetic ground truth images for eye tracker evaluation},
+  booktitle    = {Proceedings of the Symposium on Eye Tracking Research and Applications},
+  year         = {2014},
+  pages        = {219--222},
+  organization = {ACM},
+}
+
+@Article{guo2017review,
+  author    = {Guo, Yanming and Liu, Yu and Georgiou, Theodoros and Lew, Michael S},
+  title     = {A review of semantic segmentation using deep neural networks},
+  journal   = {International Journal of Multimedia Information Retrieval},
+  year      = {2017},
+  pages     = {1--7},
+  publisher = {Springer},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
