@@ -1,0 +1,22 @@
+Quantitative results can be seen in table \ref{tab:quantitative_results}.
+
+\begin{table}[t]
+    \centering
+    \caption{Mean euclidian error (MEE) on some data sets for different models (TODO: better caption) }
+    \label{tab:quantitative_results}
+    \begin{tabular}{l|l|l}
+    \hline
+    %\multicolumn{3}{c}{Generator}           \\ 
+    Training data type      & MEE synthetic data  & MEE Accuracy real data \\ \hline
+    Original data           & $\sim$ 0.3 & 1.1     \\
+    VAE                     & $\sim$ 1.7 & 1.9     \\
+    VAE + original data     & 0.3 (guess) & 134     \\
+    PGAN                    & 5.4 (pessimistic guess) & 134     \\
+    PGAN + original data    & 0.3 (optimistic guess) & 134     \\
+    AEGAN                   & 0.3 (optimistic guess) & 134     \\
+    AEGAN + original data   & 0.3 (guess) & 134     \\
+    \end{tabular}
+\end{table}
+
+
+<<Lägg till ett par histogram här.>>

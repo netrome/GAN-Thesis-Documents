@@ -1,4 +1,5 @@
-Here is the method used to examine the question
+%Here is the method used to examine the question
+In this chapter, the methods employed to answer the proposed question are presented. This chapter begins by establishing the data sets and data processing utilized in this project. Thereafter relevant neural network architectures are outlined. Finally, the approaches for training the generative models are presented. Three approaches of this kind have been employed in this project: standard \acrshort{vaes}, progressive \acrshort{gans} and Autoencoding \acrshort{gans}. They are presented in their respective section.
 
 \section{Synthetic Data Sets}
 The initial experiments in this study are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution 256x256 was generated. For reproducability, the data sets will become publicly available at the time of publication.
@@ -7,6 +8,62 @@ The synthetic data sets are fully annotated with automatically generated ground 
 
 \section{Network architectures}
 ...relevant network architectures are described here, together with figures and stuff. Base it around GAN networks, the small differences in the encoders can be explained afterwards.
+
+\begin{table}[t]
+    \centering
+    \caption{Generator architecture used in the experiments. Feature normalization and leaky ReLUs were applied after each convolution except}
+    \label{tab:generator}
+    \begin{tabular}{lll}
+        \hline
+        %\multicolumn{3}{c}{Generator}           \\ 
+        Operation          & Shape     & Stride \\ \hline
+        Input              & 128x1x1   & 1      \\
+        Conv 4x4           & 128x4x4   & 1      \\
+        Conv 3x3           & 128x4x4   & 1      \\ \hline
+        Transpose Conv 2x2 & 128x8x8   & 2      \\
+        Conv 3x3           & 112x8x8   & 1      \\ \hline
+        Transpose Conv 2x2 & 11216x16   & 2      \\
+        Conv 3x3           & 96x16x16   & 1      \\ \hline
+        Transpose Conv 2x2 & 96x32x32   & 2      \\
+        Conv 3x3           & 80x32x32   & 1      \\ \hline
+        Transpose Conv 2x2 & 80x64x64   & 2      \\
+        Conv 3x3           & 64x64x64   & 1      \\ \hline
+        Transpose Conv 2x2 & 64x128x128   & 2      \\
+        Conv 3x3           & 32x128x128   & 1      \\ \hline
+        Transpose Conv 2x2 & 32x256x256   & 2      \\
+        Conv 3x3           & 16x256x256   & 1      \\ \hline
+        Conv 1x1           & 2x256x256 & 1     
+    \end{tabular}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \caption{Discriminator architecture}
+    \label{tab:generator}
+    \begin{tabular}{lll}
+        \hline
+        %\multicolumn{3}{c}{Discriminator}           \\ 
+        Operation          & Shape     & Stride \\ \hline
+        Input              & 2x256x256   & 1   \\
+        Conv 1x1           & 16x256x256 & 1    \\ 
+        Conv 3x3           & 32x256x256 & 1    \\ 
+        Conv 2x2           & 32x128x128 & 2    \\ \hline
+        Conv 3x3           & 64x128x128 & 1    \\ 
+        Conv 2x2           & 64x64x64 & 2      \\ \hline
+        Conv 3x3           & 80x64x64 & 1      \\ 
+        Conv 2x2           & 80x32x32 & 2      \\ \hline
+        Conv 3x3           & 96x32x32 & 1      \\ 
+        Conv 2x2           & 96x16x16 & 2      \\ \hline
+        Conv 3x3           & 112x16x16 & 1     \\ 
+        Conv 2x2           & 112x8x8 & 2       \\ \hline
+        Conv 3x3           & 128x8x8 & 1       \\ 
+        Conv 2x2           & 128x4x4 & 2       \\ \hline
+        Minibatch stddev
+        Conv 3x3           & 128x4x4   & 1     \\
+        Conv 4x4           & 128x1x1   & 1     \\ 
+        Fully connected    & 1x1x1 & 1         \\
+    \end{tabular}
+\end{table}
 
 \section{\acrlong{vaes}}
 A \acrlong{vae} was constructed and trained on the synthetic data as a baseline for further experiments. The advantages of using \acrshort{vaes} for data generation in contrast to \acrshort{gans} is that they are easier to train and does not suffer from vanishing modes of data.
@@ -36,7 +93,9 @@ It was adopted because of the proposed training stability that arises from progr
 \end{figure}
 
 
+\section{Autoencoding \acrshort{gans}}
+The final method tested in this project is based on a combination of autoencoders and \acrshort{gans}. The proposed method consists of simultaneuously training a denoising autoencoder and a \acrshort{gan}, using the same network as generator and decoder. The idea is conceptually similar to the VAEGAN framework \parencite{LarsenSW15autoencodingbeyond}, but replaces the variational autoencoder with a common denoising autoencoder.
 
-\section{VAE initialization}
+% Idé till presentationen: "Variational autoencoders are stable and good at ...blablabla... . On the other hand there are two major problems with variational autoencoders, 1: they are variational (Åtgärda KL-term), 2: they are autoencoders (pixel-loss ersätts med GANs)."
 
 
