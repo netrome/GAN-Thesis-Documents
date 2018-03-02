@@ -475,7 +475,7 @@
   publisher = {JMLR. org},
 }
 
-@Article{DBLP:journals/corr/abs-1711-08534,
+@Article{safer2017wang,
   author        = {William Wang and Angelina Wang and Aviv Tamar and Xi Chen and Pieter Abbeel},
   title         = {Safer Classification by Synthesis},
   journal       = {CoRR},
