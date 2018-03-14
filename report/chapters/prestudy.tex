@@ -201,7 +201,7 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
 
 \acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods as described in Algorithm \ref{alg:VAEbase}. An issue with this approach is that the lower bound estimates require sampling from the latent variable, which is a non-differentiable operation. \textcite{kingma2013auto} resolved this issue by introducing a reparametrization trick to enable gradients to flow through the sampling process. This is applied in Algorithm \ref{alg:VAEbase}, but will not be explained in detail in this report for brevity. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
 
-\subsection{Combining \acrshort{vaes} with \acrshort{gans}}
+\subsection{\acrshort{vae} and \acrshort{gan} hybrid models}
 Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generate samples from the prior of the latent variable and uses the discriminator network as an adversarial loss function on the generated samples. 
 
 The similarity of these approaches allows different methods of combining the benefits of both approaches. The most straightforward approach of training a \acrshort{vae} with an adversarial loss function was performed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
