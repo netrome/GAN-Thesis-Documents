@@ -70,32 +70,33 @@ A \acrlong{vae} was constructed and trained on the synthetic data as a baseline 
 
 
 \section{Progressive \acrshort{gan}}
-The first method tested in this project was the progressive \acrshort{gan}, proposed by \textcite{karras2017progressive}. The proposed advantages of this approach over other existing acrshort{gan} variations is two-fold. Firstly, there is reason to believe that the quality and diversity of the generated samples are improved by the progressive training. Secondly, the training stability is believed to increase. However due to the novelty of the approach and the lack of extensive evaluations of different \acrshort{gans} it is difficult to know for sure if this is the case.
+The most advanced method tested in this project was the progressive \acrshort{gan}, proposed by \textcite{karras2017progressive}. The proposed advantages of this approach over other existing \acrshort{gan} variations is two-fold. Firstly, there is reason to believe that the quality and diversity of the generated samples are improved by the progressive training. Secondly, the training stability is believed to increase. However due to the novelty of the approach and the lack of extensive evaluations of different \acrshort{gans} it is difficult to know for sure if this is the case.
 
 It was adopted because of the proposed training stability that arises from progressivly increasing the complexity of the learned task. 
 
-\subsection{Freeze in new layers}
 
-\begin{figure}[t]
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{results/freezeInDG1.png}
-        \caption{Yo flo}
-        \label{fig:freezeInDG1}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{results/freezeInDG1.png}
-        \caption{Yo flo}
-        \label{fig:freezeInDG2}
-    \end{subfigure}
-    \caption{Yo yo yo}
-    \label{fig:fadeVsFreeze}
-\end{figure}
+%\subsection{Freeze in new layers}
+%\begin{figure}[t]
+%    \centering
+%    \begin{subfigure}[b]{0.45\textwidth}
+%        \includegraphics[width=\textwidth]{results/freezeInDG1.png}
+%        \caption{Weight freezing in old layers}
+%        \label{fig:freezeInDG1}
+%    \end{subfigure}
+%    \begin{subfigure}[b]{0.45\textwidth}
+%        \includegraphics[width=\textwidth]{results/fadeInDG1.png}
+%        \caption{Fade in new layers}
+%        \label{fig:freezeInDG2}
+%    \end{subfigure}
+%    \caption{Discriminator output on real and fake images during transition between 16x16 and 32x32 resolution images for the different transition strategies.}
+%    \label{fig:fadeVsFreeze}
+%\end{figure}
 
 
 \section{Autoencoding \acrshort{gans}}
-The final method tested in this project is based on a combination of autoencoders and \acrshort{gans}. The proposed method consists of simultaneuously training a denoising autoencoder and a \acrshort{gan}, using the same network as generator and decoder. The idea is conceptually similar to the VAEGAN framework \parencite{LarsenSW15autoencodingbeyond}, but replaces the variational autoencoder with a common denoising autoencoder.
+The final method tested in this project is based on a combination of autoencoders and \acrshort{gans}. The proposed method consists of simultaneuously training a denoising autoencoder and a \acrshort{gan}, using the same network as generator and decoder. The idea is conceptually similar to the VAEGAN framework \parencite{LarsenSW15autoencodingbeyond}. There are two major differences between this method and the VAEGAN framework, first and foremost the autoencoder trained in this method is deterministic and trained with the mean squared error loss functions. Secondly, the adversarial loss is not used to train the autoencoder, instead a normal GAN is trained separately form the autoencoder but with the decoder network as the generator. 
 
+Given enough capacity in the generator and encoder, the global minimum for the autoencoder training in this setting corresponds to the autoencoder learning the identity mapping. This causes the generator to generate realistic images on the points in the latent space the autoencoder maps the original data onto. The optimal generator in the \acrshort{gan} framework maps the entire latent space to realistic images. From this point of view the two objectives should lead to the same solution, however \acrshort{gans} tend to suffer from mode collapse and autoencoders often produce poor samples in terms of visual quality. In case of convergence this method should enforce the decoded images to be sharp and the generator to capture the entire training data distribution.
 % Idé till presentationen: "Variational autoencoders are stable and good at ...blablabla... . On the other hand there are two major problems with variational autoencoders, 1: they are variational (Åtgärda KL-term), 2: they are autoencoders (pixel-loss ersätts med GANs)."
 
 
