@@ -1,3 +1,17 @@
+A set of exploratory experiments were conducted for the different proposed methods to find settings where the methods succeed at producing visually pleasing data. Due to the unstable nature of \acrshort{gans} and the limited available resources in this project, most of experiments based on \acrshort{gans} failed to do this. The few successful models also turned out to be highly sensitive to changes in network architecture, hyperparameters or training setup leaving a loot of room for improvement and further investigations. 
+
+Of the tested methods, only the \acrshort{vae} and AEGAN was capable of producing data with some visual resemblance to the original data. The Wasserstein GAN suffered from severe mode collapse and training instability thereby resulting in only failures.
+
+The progressive \acrshort{gan} produced promising results on the initial stages with highly downsampled data. However the proposed fade-in procedure failed, forcing the model to re-learn everything from scratch at each stage of training. At the lower stages the model was capable of recovering after the fade-in but not on the full resolution stage, similar to the normal Wasserstein \acrshort{gan}. 
+
+To circumvent the fade-in issues of the progressive \acrshort{GAN} an alternative freeze-in method of introducing the layers was tested. This approach views the introduction of the new layers as a transfer learning problem and freezes all but the newly introduced weights for a number of iterations. The discriminator output of the progressive \acrshort{gan} during fade-in and freeze-in is illustrated in figure \ref{fig:fadeVsFreeze}. In this figure one can see that the freeze-in strategy results in less varying 
+
+
+-
+
+-
+
+
 The reason the progressive GAN is not featured in these results can be seen in figure \ref{fig:fadeVsFreeze}.
 
 A comparison between a VAE and the autoencoder part of an AEGAN is shown in figure <Referera till figur>. It is clear from this illustration that the simultaneous training of the GAN caused the autoencoder to generate more visually pleasing samples.
