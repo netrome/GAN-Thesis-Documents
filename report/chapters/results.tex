@@ -4,7 +4,7 @@ Of the tested methods, only the \acrshort{vae} and AEGAN was capable of producin
 
 The progressive \acrshort{gan} produced promising results on the initial stages with highly downsampled data. However the proposed fade-in procedure failed, forcing the model to re-learn everything from scratch at each stage of training. At the lower stages the model was capable of recovering after the fade-in but not on the full resolution stage, similar to the normal Wasserstein \acrshort{gan}. 
 
-To circumvent the fade-in issues of the progressive \acrshort{GAN} an alternative freeze-in method of introducing the layers was tested. This approach views the introduction of the new layers as a transfer learning problem and freezes all but the newly introduced weights for a number of iterations. The discriminator output of the progressive \acrshort{gan} during fade-in and freeze-in is illustrated in figure \ref{fig:fadeVsFreeze}. In this figure one can see that the freeze-in strategy results in less varying 
+To circumvent the fade-in issues of the progressive \acrshort{gan} an alternative freeze-in method of introducing the layers was tested. This approach views the introduction of the new layers as a transfer learning problem and freezes all but the newly introduced weights for a number of iterations. The discriminator output of the progressive \acrshort{gan} during fade-in and freeze-in is illustrated in figure \ref{fig:fadeVsFreeze}. In this figure one can see that the freeze-in strategy results in less varying 
 
 
 -
@@ -34,9 +34,58 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
     \label{fig:fadeVsFreeze}
 \end{figure}
 
+\begin{figure}[t]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=\textwidth]{autoencoded/original.png}
+        \caption{Original images}
+        \label{fig:stuff}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=\textwidth]{autoencoded/scaled_VAE_decoded.png}
+        \caption{Decoded with VAE}
+        \label{fig:stuff}
+    \end{subfigure}
+    \begin{subfigure}[b]{\textwidth}
+        \includegraphics[width=\textwidth]{autoencoded/aegan_decoded.png}
+        \caption{Decoded with AEGAN}
+        \label{fig:stuff}
+    \end{subfigure}
+    \caption{Lorem ipsum dalar set amet ...}
+    \label{fig:autoencoders}
+\end{figure}
+
 \begin{table}[t]
     \centering
-    \caption{Jaccard distance between recognized }
+    \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using synthesized data as the original data source. The JD-external measure is defined as the jaccard distance on the original test data when trained on the specified data source. The JD-internal measure is the jaccard distance on a generated test set from the same data source. The JD-incoming is for the model trained on the original data and tested on the aforementioned test set. TODO better names for this, adn write a paragraph on this}
+    \label{tab:quantitative_results}
+    \begin{tabular}{|l|l|l|l|l|}
+        \cline{2-5}
+        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{Only generated data} & \multicolumn{2}{c|}{With original data} \\ \hline
+        \textbf{Generative model} & VAE & AEGAN & VAE & AEGAN \\ \hline
+        \textbf{JD-external} & 234 & 1234 & 1234 & 3454 \\
+        \textbf{JD-internal} & 234 & 1234 & 1234 & 3454 \\ 
+        \textbf{JD-incoming} & 234 & 1234 & 1234 & 3454 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using models trained on real data as original data.}
+    \label{tab:quantitative_results}
+    \begin{tabular}{|l|l|l|l|l|}
+        \cline{2-5}
+        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{Only generated data} & \multicolumn{2}{c|}{With original data} \\ \hline
+        \textbf{Generative model} & VAE & AEGAN & VAE & AEGAN \\ \hline
+        \textbf{JD-external} & 234 & 1234 & 1234 & 3454 \\
+        \textbf{JD-internal} & 234 & 1234 & 1234 & 3454 \\ 
+        \textbf{JD-incoming} & 234 & 1234 & 1234 & 3454 \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \caption{Jaccard distance between pupil regressor output and annotations on synthetic data}
     \label{tab:quantitative_results}
     \begin{tabular}{l|l|l}
     \hline
@@ -52,19 +101,21 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
     \end{tabular}
 \end{table}
 
-\begin{table}[t]
-    \centering
-    \caption{Number of iterations of training for the different algorithms}
-    \label{tab:quantitative_results}
-    \begin{tabular}{l|l|l}
-    \hline
-    %\multicolumn{3}{c}{Generator}           \\ 
-    Training data type      & Synthetic data  & Real data \\ \hline
-    VAE                     & 560000 & 560000 \\
-    PGAN                    & idk & idk     \\
-    AEGAN                   & 520000 & 840000   \\
-    \end{tabular}
-\end{table}
+
+
+%\begin{table}[t]
+%    \centering
+%    \caption{Number of iterations of training for the different algorithms}
+%    \label{tab:quantitative_results}
+%    \begin{tabular}{l|l|l}
+%    \hline
+%    %\multicolumn{3}{c}{Generator}           \\ 
+%    Training data type      & Synthetic data  & Real data \\ \hline
+%    VAE                     & 560000 & 560000 \\
+%    PGAN                    & idk & idk     \\
+%    AEGAN                   & 520000 & 840000   \\
+%    \end{tabular}
+%\end{table}
 
 TODO: Visa kapacitet/overfitting på samma dataset, visa att genererad data är konsistent och har bra annoteringar!
 
