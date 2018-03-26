@@ -115,10 +115,12 @@ In an attempt to bring the success of \acrfull{cnns} from supervised to unsuperv
     \item Use strided convolutions instead of pooling in discriminator. Upsample with fractional-strided convolutions in generator.
     \item Apply batch normalization \parencite{ioffeS15batchnorm} in both networks.
     \item Avoid fully connected hidden layers in deeper architectures.
-    \item Use ReLU as an activation function in generator and LeakyReLU in the discriminator.
+    \item Use ReLU as an activation function in generator and LeakyReLU \parencite{maas2013rectifier} in the discriminator.
 \end{itemize}
 
-Subsequent work have shown alternatives towards some of these guidelines. For an example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{xiang2017effects}, whereby alternative normalizations have been applied to achieve the desired effects \parencite{karras2017progressive, miyato2017spectral}.
+Subsequent work have shown alternatives towards some of these guidelines. For an example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{salimans2016improved}. To circumvent the issues of Batch Normalization, tweaked versions of the original formulations have been proposed such as Reference Batch Normalization and Virtual Batch Normalization. Moreover it has been increasingly common to apply alternative normalization schemes, such as performing pixelwise normalization over individual feature maps \parencite{karras2017progressive}, normalizing weight tensors with their largest singular value \parencite{miyato2017spectral} and decoupling the norm and direction of weight tensors \parencite{NIPS2016weightnorm, xiang2017effects}.
+
+In recent \acrshort{gan} formulations, it has been increasingly common to apply the LeakyReLU activation function in both networks and not just in the discriminator. 
 
 \subsubsection{Conditional \acrshort{gan}}
 A limitation of the \acrshort{gan} framework is that it does not allow external information such as image annotations to be modeled. A straightforward extension of the original framework is to let the generator model the conditional distribution $p_S(X|Y)$, where $Y$ represents the additional information. This was proposed in the original article, and was later formally introduced and tested on MNIST\footnote{\textcite{lecun2010mnist}} by \textcite{mirza2014conditional}. The conditional distributions are modeled by introducing the additional information as input to both the discriminator and the classifier.
@@ -206,20 +208,20 @@ Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution 
 
 The similarity of these approaches allows different methods of combining the benefits of both approaches. The most straightforward approach of training a \acrshort{vae} with an adversarial loss function was performed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
 
-\section{Semi-supervised learning}
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{supersemiun.pdf}
-    \caption{Levels of supervision in Machine Learning. Unsuperviesd algorithms are not dependent on labels and can therefore be applied on any type of data, whereas supervised algorithms require fully annotated data sets. Semi-supervised learning emerges as a middle ground between the two approaches.}
-    \label{fig:supersemiun}
-\end{figure}
-Supervised learning can be seen as the problem of learning from data that is structured in pairs of patterns ($x$) and labels ($y$). The data set can consequently be represented as $S = {(x_1, y_1), ..., (x_n, y_n)}$. The task is then to predict the labels given the patterns. This transitions to semi-supervised learning when the training data does not necessarily contain labels for each pattern. The relations between the classes of supervision is illustrated in figure \ref{fig:supersemiun}. 
-
-Methods for semi-supervised learning have shown success in improving the accuracy of supervised methods in settings where labeled data are limited \parencite{Zhou2012}. Generative models are well suited for semi-supervised learning, and several methods building on deep generative models have been proposed \parencite{kingma2014semi, salimans2016improved, springenberg2015unsupervised, wuliu2017selftrainsemisup, li2017triple}.
-
-A common method for semi-supervised learning is self training. Self training is based on computing estimates of the missing labels which subsequently are reused for training the network. An interesting instance of self training when considering \acrshort{gans} is the triple \acrshort{gan} \parencite{li2017triple}. The triple \acrshort{gan} is a conditional \acrshort{gan} where the generator network is accompanied by a classifier network, which predicts the labels given the data. This network is also trained with and adversarial loss, at the same time as it is used to generate annotations for the generator. This constellation allows the networks to be trained on large amounts of unlabeled data when the classifier converges faster than the generator, which normally is the case.
-
-The triple \acrshort{gan} is closesly related to the $\Delta$-\acrshort{gan} \parencite{triangleNIPS20177109} which also allows semi-supervised learning. The semi-supervised learning proposed for the $\Delta$-\acrshort{gan} is unlike the triple \acrshort{gan} not based on self training. Instead the objective function can be decomposed into a conditional part and a bidirectional part which can account for labeled and unlabeled data separately.
+% \section{Semi-supervised learning}
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\textwidth]{supersemiun.pdf}
+%     \caption{Levels of supervision in Machine Learning. Unsuperviesd algorithms are not dependent on labels and can therefore be applied on any type of data, whereas supervised algorithms require fully annotated data sets. Semi-supervised learning emerges as a middle ground between the two approaches.}
+%     \label{fig:supersemiun}
+% \end{figure}
+% Supervised learning can be seen as the problem of learning from data that is structured in pairs of patterns ($x$) and labels ($y$). The data set can consequently be represented as $S = {(x_1, y_1), ..., (x_n, y_n)}$. The task is then to predict the labels given the patterns. This transitions to semi-supervised learning when the training data does not necessarily contain labels for each pattern. The relations between the classes of supervision is illustrated in figure \ref{fig:supersemiun}. 
+% 
+% Methods for semi-supervised learning have shown success in improving the accuracy of supervised methods in settings where labeled data are limited \parencite{Zhou2012}. Generative models are well suited for semi-supervised learning, and several methods building on deep generative models have been proposed \parencite{kingma2014semi, salimans2016improved, springenberg2015unsupervised, wuliu2017selftrainsemisup, li2017triple}.
+% 
+% A common method for semi-supervised learning is self training. Self training is based on computing estimates of the missing labels which subsequently are reused for training the network. An interesting instance of self training when considering \acrshort{gans} is the triple \acrshort{gan} \parencite{li2017triple}. The triple \acrshort{gan} is a conditional \acrshort{gan} where the generator network is accompanied by a classifier network, which predicts the labels given the data. This network is also trained with and adversarial loss, at the same time as it is used to generate annotations for the generator. This constellation allows the networks to be trained on large amounts of unlabeled data when the classifier converges faster than the generator, which normally is the case.
+% 
+% The triple \acrshort{gan} is closesly related to the $\Delta$-\acrshort{gan} \parencite{triangleNIPS20177109} which also allows semi-supervised learning. The semi-supervised learning proposed for the $\Delta$-\acrshort{gan} is unlike the triple \acrshort{gan} not based on self training. Instead the objective function can be decomposed into a conditional part and a bidirectional part which can account for labeled and unlabeled data separately.
 
 %\section{Image-to-Image Models}
 

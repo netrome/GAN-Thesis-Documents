@@ -489,6 +489,15 @@
   url           = {http://arxiv.org/abs/1711.08534},
 }
 
+@InProceedings{nowozin2016f,
+  author    = {Nowozin, Sebastian and Cseke, Botond and Tomioka, Ryota},
+  title     = {f-gan: Training generative neural samplers using variational divergence minimization},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2016},
+  pages     = {271--279},
+  groups    = {GAN theory},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:

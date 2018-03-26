@@ -59,13 +59,15 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
     \centering
     \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using synthesized data as the original data source. The JD-external measure is defined as the jaccard distance on the original test data when trained on the specified data source. The JD-internal measure is the jaccard distance on a generated test set from the same data source. The JD-incoming is for the model trained on the original data and tested on the aforementioned test set. TODO better names for this, adn write a paragraph on this}
     \label{tab:quantitative_results}
-    \begin{tabular}{|l|l|l|l|l|}
+    \begin{tabular}{|l|ll|ll|}
         \cline{2-5}
-        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{Only generated data} & \multicolumn{2}{c|}{With original data} \\ \hline
+        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{JD} & \multicolumn{2}{c|}{RD ($\%$)} \\ \hline
         \textbf{Generative model} & VAE & AEGAN & VAE & AEGAN \\ \hline
-        \textbf{JD-external} & 234 & 1234 & 1234 & 3454 \\
-        \textbf{JD-internal} & 234 & 1234 & 1234 & 3454 \\ 
-        \textbf{JD-incoming} & 234 & 1234 & 1234 & 3454 \\ \hline
+        \textbf{External} & 0.159  & 0.148 & 165.5 & 154.1 \\
+        \textbf{Internal} & 0.0133 & 0.0491 & 13.8 & 51.1 \\ 
+        \textbf{Incoming} & 0.0264 & 0.1225 & 27.5 & 127.5 \\ 
+        \textbf{Augmented} & 0.0944 & 0.1032 & 98.3 & 107.4 \\ 
+        \hline
     \end{tabular}
 \end{table}
 
@@ -73,13 +75,15 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
     \centering
     \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using models trained on real data as original data.}
     \label{tab:quantitative_results}
-    \begin{tabular}{|l|l|l|l|l|}
+    \begin{tabular}{|l|ll|ll|}
         \cline{2-5}
-        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{Only generated data} & \multicolumn{2}{c|}{With original data} \\ \hline
+        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{JD} & \multicolumn{2}{c|}{RD ($\%$)} \\ \hline
         \textbf{Generative model} & VAE & AEGAN & VAE & AEGAN \\ \hline
-        \textbf{JD-external} & 234 & 1234 & 1234 & 3454 \\
-        \textbf{JD-internal} & 234 & 1234 & 1234 & 3454 \\ 
-        \textbf{JD-incoming} & 234 & 1234 & 1234 & 3454 \\ \hline
+        \textbf{External} & 0.3445 & 0.2084 & 303.8 & 183.8 \\
+        \textbf{Internal} & 0.0284 & 0.0457 & 25.0 & 40.3 \\ 
+        \textbf{Incoming} & 0.1008 & 0.0786 & 88.9 & 62.3 \\ 
+        \textbf{Augmented} & 0.1151 & 0.1221  & 101.5 & 107.7 \\ 
+        \hline
     \end{tabular}
 \end{table}
 
