@@ -59,14 +59,16 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
     \centering
     \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using synthesized data as the original data source. The JD-external measure is defined as the jaccard distance on the original test data when trained on the specified data source. The JD-internal measure is the jaccard distance on a generated test set from the same data source. The JD-incoming is for the model trained on the original data and tested on the aforementioned test set. TODO better names for this, adn write a paragraph on this}
     \label{tab:quantitative_results}
-    \begin{tabular}{|l|ll|ll|}
-        \cline{2-5}
-        \multicolumn{1}{c}{ } & \multicolumn{2}{|c|}{JD} & \multicolumn{2}{c|}{RD ($\%$)} \\ \hline
-        \textbf{Generative model} & VAE & AEGAN & VAE & AEGAN \\ \hline
-        \textbf{External} & 0.159  & 0.148 & 165.5 & 154.1 \\
-        \textbf{Internal} & 0.0133 & 0.0491 & 13.8 & 51.1 \\ 
-        \textbf{Incoming} & 0.0264 & 0.1225 & 27.5 & 127.5 \\ 
-        \textbf{Augmented} & 0.0944 & 0.1032 & 98.3 & 107.4 \\ 
+    \begin{tabular}{|ll|ll|ll|}
+        \cline{3-6}
+        \multicolumn{2}{c}{ } & \multicolumn{2}{|c|}{JD} & \multicolumn{2}{c|}{RD ($\%$)} \\ \hline
+        \textbf{Train} & \textbf{Test} & VAE & AEGAN & VAE & AEGAN \\ \hline
+        F & R & 0.159  & 0.148 & 165.5 & 154.1 \\
+        F & F & 0.0133 & 0.0491 & 13.8 & 51.1 \\ 
+        R & F & 0.0264 & 0.1225 & 27.5 & 127.5 \\ 
+        F + R & R & 0.0944 & 0.1032 & 98.3 & 107.4 \\ 
+        \hline
+        R & R & \multicolumn{2}{c|}{siffra} & \multicolumn{2}{c|}{100} \\
         \hline
     \end{tabular}
 \end{table}
