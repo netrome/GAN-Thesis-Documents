@@ -498,6 +498,27 @@
   groups    = {GAN theory},
 }
 
+@InProceedings{maas2013rectifier,
+  author    = {Maas, Andrew L and Hannun, Awni Y and Ng, Andrew Y},
+  title     = {Rectifier nonlinearities improve neural network acoustic models},
+  booktitle = {Proc. icml},
+  year      = {2013},
+  volume    = {30},
+  number    = {1},
+  pages     = {3},
+}
+
+@Article{markuvs2014eye,
+  author    = {Marku{\v{s}}, Nenad and Frljak, Miroslav and Pand{\v{z}}i{\'c}, Igor S and Ahlberg, J{\"o}rgen and Forchheimer, Robert},
+  title     = {Eye pupil localization with an ensemble of randomized trees},
+  journal   = {Pattern recognition},
+  year      = {2014},
+  volume    = {47},
+  number    = {2},
+  pages     = {578--587},
+  publisher = {Elsevier},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:
