@@ -2,35 +2,41 @@
 In this chapter, the methods employed to answer the proposed question are presented. This chapter begins by establishing the data sets and data processing utilized in this project. Thereafter, the experimental setup is described and relevant neural network architectures are outlined. Finally, the approaches for training the generative models are presented. Three approaches of this kind have been employed in this project: standard \acrshort{vaes}, progressive \acrshort{gans} and Autoencoding \acrshort{gans}. They are presented in their respective section.
 
 \section{Pupil Localization}
-Pupil Localization is an instance of the problem of object Localization. The objective is to localize the pupil in a image of an eye. In normal cases, pupil localization is not achieved with deep neural networks. There already exist more computationally efficient methods for this task, such as \parencite{markuvs2014eye}. On the other hand deep neural networks for semantic segmentation are capable of predicting high quality segmentation maps on diverse complicated data sets \parencite{ChenPK0Y16semantic} and should therefore perform extraordinary well on the relatively simple task of pupil localization.
+To investigate the extent to which deep generative models can act as a drop-in replacement for real data sets, a case study of Pupil Localization was performed. Pupil Localization is an instance of the problem of object Localization. The objective is to localize the pupil in an image of an eye. In normal cases, pupil localization is not achieved with deep neural networks. There already exist more computationally efficient methods for this task, such as \parencite{markuvs2014eye}. On the other hand deep neural networks for semantic segmentation are capable of predicting high quality segmentation maps on diverse complicated data sets \parencite{ChenPK0Y16semantic} and should therefore perform extraordinary well on the relatively simple task of pupil localization.
 
 By comparing pupil localization performance when the localizer is trained on either data from a deep generative model or data from the original data set and tested on data from either of the domains, the usability of the generated data for model training or evaluation can be assessed. Especially the case of training on generated data and testing on the original data is interesting. Assuming that the localizer learns the optimal mapping for the data domain it is trained on, the performance of this localizer can then be used as a measure of the quality and usability of the generated data. 
 
 The benefit of this approach is that the cross-data localization error can easily be compared to the intra-data localization error . The relative magnitutes of these losses indicate the difficulties of adapting models between the domains. This enables not only giving a binary answer to the original question of this project but showing how close to succeeding the tested methods are in learning the data distribution.
 
-TODO: Måste motivera kvalitativt att regressorn i princip är perfekt (Kan även motiveras av subpixelpresicionen på syntetiska datan).
-
 \section{Synthetic Data}
-The initial experiments in this study are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution 256x256 was generated. For reproducability, the data sets will become publicly available at the time of publication.
+The initial experiments in this study are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution 256x256 was generated, a training set consisting of 3000 images and a test set with 300 images. For reproducability, these data sets will become publicly available at the time of publication.
 
 The synthetic data sets are fully annotated with automatically generated ground truth labels. The relevant labels for the experiments are converted to heatmaps when loaded for training and evaluation as in most cases of semantic segmentation \parencite{guo2017review}. These heatmaps are thereafter concatenated with the real images, forming feature maps of shape 2x320x320. By viewing the annotations as a part of the data, unsupervised models that learn the data distribution implicitly learn the relations between the annotations and the images.
 
 \section{Real World Data}
-A propiretary data set was used to further evaluate the methods. The data set consits of 9605 different manually annotated recordings of human subjects looking at a screen. Each recording consists of a set of ROI images of the eye region of the subjects. 
+A propiretary data set was used to further evaluate the methods. The data set consits of 9605 different manually annotated recordings of human subjects looking at a screen, split into a training set of 1000 images and a test set of 8605 images. Each recording consists of a set of ROI images of the eye region of the subjects. 
 
+To adapt this data to the Pupil Regression framework, the images were cropped to 256x256 patches around the eyes. The cropping was random to ensure that the pupil is not always centered in the image, which otherwise could cause the networks to learn undesired patterns such as always producing a trivial prediction in the center of the image. 
 
+During data sampling, the probabilites of the individual images were weighted in such a way that the separate recordings were equally probable to appear. This prevents recordings with more images to be over-representative during training, which otherwise could cause the models to over-adjust to the conditions of these recordings.
 
 \section{Network architectures}
-...relevant network architectures are described here, together with figures and stuff. Base it around GAN networks, the small differences in the encoders can be explained afterwards.
+The deep generative models as well as the Pupil Localizer are based on deep convolutional neural networks. There are four different types of networks that are utilized in the different models in this work: Generators, discriminators, encoders and transformers. The default generator architecture is outlined in table \ref{tab:generator}. The default discriminator architecture is outlined in table \ref{tab:discriminator}. The main structure of these networks follows the architectures used by \textcite{karras2017progressive}, however the feature maps and instead of using non-parametric upsampling followed by an extra convolution the upsampling is performed with fractionally strided convolutions. These changes are motivated by the limited time-frame of this project as they enable faster training of the networks.
+
+The encoder follows the structure of the discriminator but does not use minibatch discrimination, and the output shape is adjusted to the size of the latent space. 
+
+The transformer is only used for Pupil Localization and is a normal image-to-image network. The structure of the transformer is shown in table \ref{tab:transformer}.
+
+%...relevant network architectures are described here, together with figures and stuff. Base it around GAN networks, the small differences in the encoders can be explained afterwards.
 
 \begin{table}[t]
     \centering
-    \caption{Generator architecture used in the experiments. Feature normalization and leaky ReLUs were applied after each convolution except}
+    \caption{Generator architecture used in the experiments. Feature normalization and leaky ReLUs were applied after each convolution except the last one.}
     \label{tab:generator}
-    \begin{tabular}{lll}
+    \begin{tabular}{|lll|}
         \hline
         %\multicolumn{3}{c}{Generator}           \\ 
-        Operation          & Shape     & Stride \\ \hline
+        Operation          & Output shape     & Stride \\ \hline
         Input              & 128x1x1   & 1      \\
         Conv 4x4           & 128x4x4   & 1      \\
         Conv 3x3           & 128x4x4   & 1      \\ \hline
@@ -46,18 +52,18 @@ A propiretary data set was used to further evaluate the methods. The data set co
         Conv 3x3           & 32x128x128   & 1      \\ \hline
         Transpose Conv 2x2 & 32x256x256   & 2      \\
         Conv 3x3           & 16x256x256   & 1      \\ \hline
-        Conv 1x1           & 2x256x256 & 1     
+        Conv 1x1           & 2x256x256 & 1        \\ \hline
     \end{tabular}
 \end{table}
 
 \begin{table}[t]
     \centering
-    \caption{Discriminator architecture}
-    \label{tab:generator}
-    \begin{tabular}{lll}
+    \caption{Discriminator architecture, Leaky ReLUs were applied after each convolution except the last one.}
+    \label{tab:discriminator}
+    \begin{tabular}{|lll|}
         \hline
         %\multicolumn{3}{c}{Discriminator}           \\ 
-        Operation          & Shape     & Stride \\ \hline
+        Operation          & Output shape     & Stride \\ \hline
         Input              & 2x256x256   & 1   \\
         Conv 1x1           & 16x256x256 & 1    \\ 
         Conv 3x3           & 32x256x256 & 1    \\ 
@@ -75,7 +81,33 @@ A propiretary data set was used to further evaluate the methods. The data set co
         Minibatch stddev
         Conv 3x3           & 128x4x4   & 1     \\
         Conv 4x4           & 128x1x1   & 1     \\ 
-        Fully connected    & 1x1x1 & 1         \\
+        Fully connected    & 1x1x1 & 1         \\ \hline
+    \end{tabular}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \caption{Transformer architecture used in the experiments. Skip layers were introduced as indicated in the table. Leaky ReLUs were applied after each convolution except the last one. In the prescence of skip connections the addition of the feature maps was performed before the Leaky ReLUs were applied.}
+    \label{tab:transformer}
+    \begin{tabular}{|lll|}
+        \hline
+        %\multicolumn{3}{c}{Generator}           \\ 
+        Operation           & Output shape  & Stride \\ \hline
+        Input               & 1x256x256     & 1     \\
+        Conv 1x1 (1)           & 16x256x256    & 1     \\
+        Conv 3x3 (2)            & 32x128x128    & 2     \\    
+        Conv 3x3 (3)           & 64x64x64    & 2     \\ 
+        Conv 3x3 (4)           & 128x32x32    & 2    \\ 
+        Conv 3x3 (5)           & 256x16x16    & 2    \\ 
+        Conv 3x3 (6)           & 256x8x8     & 2    \\ 
+        Conv 3x3            & 256x4x4    & 2    \\ \hline
+        Transpose Conv 4x4 + (6)  & 256x8x8    & 2    \\
+        Transpose Conv 4x4 + (5) & 256x16x16    & 2    \\
+        Transpose Conv 4x4 + (4) & 128x32x32    & 2    \\
+        Transpose Conv 4x4 + (3) & 64x64x64    & 2    \\
+        Transpose Conv 4x4 + (2) & 32x128x128    & 2    \\
+        Transpose Conv 4x4 + (1)  & 16x256x256    & 2    \\
+        Conv 1x1            & 1x256x256    & 1     \\ \hline
     \end{tabular}
 \end{table}
 
