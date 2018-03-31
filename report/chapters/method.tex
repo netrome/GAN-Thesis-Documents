@@ -81,7 +81,7 @@ The transformer is only used for Pupil Localization and is a normal image-to-ima
         Minibatch stddev
         Conv 3x3           & 128x4x4   & 1     \\
         Conv 4x4           & 128x1x1   & 1     \\ 
-        Fully connected    & 1x1x1 & 1         \\ \hline
+        Fully connected    & 1x1 & 1         \\ \hline
     \end{tabular}
 \end{table}
 
@@ -113,6 +113,8 @@ The transformer is only used for Pupil Localization and is a normal image-to-ima
 
 \section{\acrlong{vaes}}
 A \acrlong{vae} was constructed and trained on the synthetic data as a baseline for further experiments. The advantages of using \acrshort{vaes} for data generation in contrast to \acrshort{gans} is that they are easier to train and does not suffer from vanishing modes of data.
+
+The \acrlong{vae} was designed using the default generator network as a decoder and the default encoder network with an output shape of 128x2. In this framework, the encoder output is interpreted as the mean values and the standard deviations of a 128-dimensional isotropic gaussian distribution. Using $E$ to denote the encoder function, this can be formulated as $P(Z|X=x) \in \mathcal{N}(\mu, \sigma)$, where $(\mu, \sigma) = E(x)$. Furthermore, the posterior $P(X|Z=z)$ is modelled as a double exponential where the mean value is the generator output as $P(X|Z=z) \in \text{Double Exp}(G(z), \lambda)$. In this context the variance is taken to be a hyperparameter.
 
 \section{Wasserstein \acrshort{gan}}
 The Wasserstein \acrshort{gan} was adopted as a second baseline to compare against more complex methods. It is sensible since ...blablabla...
