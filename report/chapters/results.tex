@@ -4,17 +4,39 @@ Of the tested methods, only the \acrshort{vae} and AEGAN was capable of producin
 
 The progressive \acrshort{gan} produced promising results on the initial stages with highly downsampled data. However the proposed fade-in procedure failed, forcing the model to re-learn everything from scratch at each stage of training. At the lower stages the model was capable of recovering after the fade-in but not on the full resolution stage, similar to the normal Wasserstein \acrshort{gan}. 
 
-To circumvent the fade-in issues of the progressive \acrshort{gan} an alternative freeze-in method of introducing the layers was tested. This approach views the introduction of the new layers as a transfer learning problem and freezes all but the newly introduced weights for a number of iterations. The discriminator output of the progressive \acrshort{gan} during fade-in and freeze-in is illustrated in figure \ref{fig:fadeVsFreeze}. In this figure one can see that the freeze-in strategy results in less varying 
+To circumvent the fade-in issues of the progressive \acrshort{gan} an alternative freeze-in method of introducing the layers was tested. This approach views the introduction of the new layers as a transfer learning problem and freezes all but the newly introduced weights for a number of iterations. The method resembles gradual tuning for transfer learning [citera]. The discriminator output of the progressive \acrshort{gan} during fade-in and freeze-in is illustrated in figure \ref{fig:fadeVsFreeze}. In this figure one can see that the freeze-in strategy results in a more stable transition between the stages. However this strategy requires the adversarial game between the last layers of the generator and the first layers of the discriminator to be balanced for all transitions which was observed not to be the case, leaving no room for quantitative evaluation for this method.
 
+% TODO < citera gradual tuning
 
--
+\section{Qualitative Results}
+Figure \ref{fig:autoencoders} shows a batch of images, together with the same batch after being encoded and decoded by both a \acrshort{vae} and an AEGAN. From this figure it is clear that both of these methods have managed to learn to capture the main aspects of the full data distribution. Both methods display varying illuminance levels, pupil dilations, different reflections and eyelid openness. However it is common for both methods to fail to capture the original information in some of these such as pupil dilation. Even though the methods display a clear variance in pupil dilation, the reconstructed dilation does not always correspond to the original pupil size.
 
--
+The single most striking observation to emerge from comparing these images is the level of details captured by the AEGAN. Unlike the \acrshort{vae}, the AEGAN learned to produce glints and sharp eyelashes. It is also interesting to note that the glints are sometimes correctly positioned which due to the structure of deep convolutional neural networs is not easily learned. However in many cases it can be seen that the glints are poorly placed.
 
+Decoding images from a learned posterior is not the same as generating new images from the prior distribution. Examples of generated images from a $\mathcal{N}(0, 1)$ distribution are shown in figure <ny figur här>. In this case the Wasserstein \acrshort{gan} is also featured as it allows sampling new data. 
 
-The reason the progressive GAN is not featured in these results can be seen in figure \ref{fig:fadeVsFreeze}.
+What stands out in this figure after observing the decoded images is the \acrshort{vae} images, which sometimes looks decent as before but in some cases looks more artistic than realistic. Except for this observation, it is also clear from the figure that the Wasserstein \acrshort{gan} suffered from severe mode collapse wereas the AEGAN managed to capture both a good variance and visually pleasing quality of the samples.
 
-A comparison between a VAE and the autoencoder part of an AEGAN is shown in figure <Referera till figur>. It is clear from this illustration that the simultaneous training of the GAN caused the autoencoder to generate more visually pleasing samples.
+% TODO < lägg till figur
+
+% However, failing to position the glints correctly causes the \acrshort{gan} objective and the autoencoder loss to operate in different directions, as the autoencoder loss will penalize the existance of wrongly placed glints causing the model to generate more modest and non-realistic glints which in turn will be penalized by the \acrshort{gan}.  <- Diskussionsmaterial ? 
+
+% ...
+%A comparison between a VAE and the autoencoder part of an AEGAN is shown in figure <Referera till figur>. It is clear from this illustration that the simultaneous training of the GAN caused the autoencoder to generate more visually pleasing samples.
+
+\section{Quantitative Results}
+For the quantitative evaluation the default transofrmer was trained to generate segmentation maps from images of eyes. The images in this context can be directly from one of the data sets as well as from a generative model trained on one of these data sets. In the first case the images are denoted as "real" images, and in the second case they are denoted as "fake". 
+
+The difference between the predicted segmentation map and the original was defined as the Jaccard Distance, defined as
+\begin{equation}
+    D_{Jaccard}(X, Y) = 1 - \frac{X \cap Y}{X \cup Y},
+    \label{eq:jaccard}
+\end{equation}
+where the sets $X$ and $Y$ is the set of activated pixles in the respective segmentation map, which corresponds to the set of $1$:s for the real annotations. Any segmentation map generated by a neural network may include any floating point value for each pixel. These values were therefore rounded to produce a binary segmentation map. In this evaluation there exists images without pupils in some images, this results in computing the Jaccard distance between the empty set. To solve this all sets implicitly contain an extra element common to all sets. This can easily be computed as it only requires adding $1$ to the denominator and numerator in the fraction in (\ref{eq:jaccard}).
+
+The 
+
+In table \ref{tab:quantitative_results}
 
 Quantitative results can be seen in table \ref{tab:quantitative_results}.
 
@@ -51,7 +73,7 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
         \caption{Decoded with AEGAN}
         \label{fig:stuff}
     \end{subfigure}
-    \caption{Lorem ipsum dalar set amet ...}
+    \caption{A batch of synthetic images, encoded and decoded by the encoder-decoder based methods.}
     \label{fig:autoencoders}
 \end{figure}
 
@@ -76,7 +98,7 @@ Quantitative results can be seen in table \ref{tab:quantitative_results}.
 \begin{table}[t]
     \centering
     \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using models trained on real data as original data.}
-    \label{tab:quantitative_results}
+    \label{tab:quantitative_results_real}
     \begin{tabular}{|ll|lll|lll|}
         \cline{3-8}
         \multicolumn{2}{c}{ } & \multicolumn{3}{|c|}{JD} & \multicolumn{3}{c|}{RD ($\%$)} \\ \hline
