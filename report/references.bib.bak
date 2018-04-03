@@ -519,6 +519,34 @@
   publisher = {Elsevier},
 }
 
+@Article{ChenPK0Y16semantic,
+  author        = {Liang{-}Chieh Chen and George Papandreou and Iasonas Kokkinos and Kevin Murphy and Alan L. Yuille},
+  title         = {DeepLab: Semantic Image Segmentation with Deep Convolutional Nets, Atrous Convolution, and Fully Connected CRFs},
+  journal       = {CoRR},
+  year          = {2016},
+  volume        = {abs/1606.00915},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/bib/journals/corr/ChenPK0Y16},
+  eprint        = {1606.00915},
+  timestamp     = {Wed, 07 Jun 2017 14:42:37 +0200},
+  url           = {http://arxiv.org/abs/1606.00915},
+}
+
+@Article{montone2017gradual,
+  author        = {Guglielmo Montone and J. Kevin O'Regan and Alexander V. Terekhov},
+  title         = {Gradual Tuning: a better way of Fine Tuning the parameters of a Deep Neural Network},
+  journal       = {CoRR},
+  year          = {2017},
+  volume        = {abs/1711.10177},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/bib/journals/corr/abs-1711-10177},
+  eprint        = {1711.10177},
+  timestamp     = {Mon, 04 Dec 2017 18:34:59 +0100},
+  url           = {http://arxiv.org/abs/1711.10177},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:
