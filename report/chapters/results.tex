@@ -118,6 +118,19 @@
         \end{subtable}
 \end{table}
 
+\begin{table}[t]
+    \centering
+    \caption{Toy experiments on augmentation}
+    \label{tab:toy_experiments}
+    \begin{tabular}{|l|ll|ll|ll|ll|}
+        \cline{2-9}
+        \multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{Original} & \multicolumn{2}{c|}{WGAN} & \multicolumn{2}{c|}{VAE} & \multicolumn{2}{c|}{AEGAN} \\ \hline
+        \textbf{Data set} & Mean & Std & Mean & Std & Mean & Std & Mean & Std \\ \hline
+        Iris & \num{0.19751941} & \num{0.010727016} & \num{0.216506} & \num{0.0261355455} & \num{0.2040766} & \num{0.0093358} & \num{0.1780217} & \num{0.0084796728} \\
+        \hline
+    \end{tabular}
+\end{table}
+
 %\begin{table}[t]
 %    \centering
 %    \caption{Jaccard distance between pupil regressor output and annotations for different sources of training data using models trained on real world data as original data. The structure and notation follows table \ref{tab:quantitative_results}.}
