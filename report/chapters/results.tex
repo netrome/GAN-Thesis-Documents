@@ -201,6 +201,9 @@ where the sets $X$ and $Y$ is the set of activated pixles in the respective segm
 
 The Jaccard distances for segmentation maps produced by transformers trained and tested on different data sets is shown in table \ref{tab:quantitative_results} for the models trained on synthetic data and in table \ref{tab:quantitative_results_real} for the models trained on the real world data. The most important results in both of these tables is the first row which roughly corresponds to the direct usability of the generated data. In both cases, the \acrshort{aegan} performed best for this measure indicating as already qualitatively observed that the \acrshort{aegan} produced the best data sets. Another interesting finding is that training on both generated data and real world data did not increase the perfromance on real data for any of the cases except the \acrshort{vae} on synthetic data, where the test distance were slightly lower thant the original test distance.
 
+\section{The effect of sampling bias}  % - borde skriva om detta i metod-delen också
+TODO: Undersök om AEGANv2 kan augmentera MNIST med förbättrat resultat. Kontrastera resultat mot v1 med tolkningen att v2 är mindre påverkad av sampling-bias. Samma sak bör göras med VAE. Ifall posterior-augmentering är bättre än vanlig så bör uppskalade experiment också genomföras.
+
 %In table \ref{tab:quantitative_results}
 
 %Quantitative results can be seen in table \ref{tab:quantitative_results}.
