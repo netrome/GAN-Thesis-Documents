@@ -120,16 +120,26 @@
 
 \begin{table}[t]
     \centering
-    \caption{Toy experiments on augmentation}
+    \caption{Toy experiments on data augmentation}
     \label{tab:toy_experiments}
-    \begin{tabular}{|l|ll|ll|ll|ll|}
-        \cline{2-9}
-        \multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{Original} & \multicolumn{2}{c|}{WGAN} & \multicolumn{2}{c|}{VAE} & \multicolumn{2}{c|}{AEGAN} \\ \hline
-        \textbf{Data set} & Mean & Std & Mean & Std & Mean & Std & Mean & Std \\ \hline
-        Iris & \num{0.19751941} & \num{0.010727016} & \num{0.216506} & \num{0.0261355455} & \num{0.2040766} & \num{0.0093358} & \num{0.1780217} & \num{0.0084796728} \\
-        \hline
-    \end{tabular}
+    \begin{subtable}{0.9\textwidth}
+        \begin{tabular}{|l|ll|ll|ll|ll|}
+            \cline{2-9}
+            \multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{Baseline} & \multicolumn{2}{c|}{WGAN} & \multicolumn{2}{c|}{VAE} & \multicolumn{2}{c|}{AEGAN} \\ \hline
+            \textbf{Data set} & Mean & Std & Mean & Std & Mean & Std & Mean & Std \\ \hline
+            Iris & \num{0.19751941} & \num{0.010727016} & \num{0.216506} & \num{0.0261355455} & \num{0.2040766} & \num{0.0093358} & \num{0.1780217} & \num{0.0084796728} \\
+            \hline
+        \end{tabular}
+    \end{subtable}
+    \begin{subtable}{0.9\textwidth}
+        \begin{tabular}{|l|lll|l|l|}
+            \cline{2-6}
+            \multicolumn{1}{c|}{} & Baseline 100 & Baseline 200 & Baseline 400 & VAE & AEGAN \\ \hline
+            Error rate ($\%$) & \num{0.90} & \num{1.02} & \num{0.87} & \num{1.33} & \textbf{\num{0.86}} \\ \hline
+        \end{tabular}
+    \end{subtable}
 \end{table}
+
 
 %\begin{table}[t]
 %    \centering
@@ -201,8 +211,13 @@ where the sets $X$ and $Y$ is the set of activated pixles in the respective segm
 
 The Jaccard distances for segmentation maps produced by transformers trained and tested on different data sets is shown in table \ref{tab:quantitative_results} for the models trained on synthetic data and in table \ref{tab:quantitative_results_real} for the models trained on the real world data. The most important results in both of these tables is the first row which roughly corresponds to the direct usability of the generated data. In both cases, the \acrshort{aegan} performed best for this measure indicating as already qualitatively observed that the \acrshort{aegan} produced the best data sets. Another interesting finding is that training on both generated data and real world data did not increase the perfromance on real data for any of the cases except the \acrshort{vae} on synthetic data, where the test distance were slightly lower thant the original test distance.
 
-\section{The effect of sampling bias}  % - borde skriva om detta i metod-delen också
-TODO: Undersök om AEGANv2 kan augmentera MNIST med förbättrat resultat. Kontrastera resultat mot v1 med tolkningen att v2 är mindre påverkad av sampling-bias. Samma sak bör göras med VAE. Ifall posterior-augmentering är bättre än vanlig så bör uppskalade experiment också genomföras.
+%\section{The effect of sampling bias}  % - borde skriva om detta i metod-delen också
+%TODO: Undersök om AEGANv2 kan augmentera MNIST med förbättrat resultat. Kontrastera resultat mot v1 med tolkningen att v2 är mindre påverkad av sampling-bias. Samma sak bör göras med VAE. Ifall posterior-augmentering är bättre än vanlig så bör uppskalade experiment också genomföras.
+
+\section{Augmenting data for classification}
+% TODO: Formulera om Iris som klassificeringsprblem
+
+In the case of discrete classification there is no obvious method for concatenating data with the annotations. On the other hand it is sensible to assume that a small peturbation of an image does not alter the class label. With this assumption the autoencoder-based methods can still be used for data augmentation. Instead of sampling the latent points for the new data from the prior distribution $P(Z)$, they are sampled from the posterior $P(Z|X=x)$ yielding new data points. This procedure was tested on the MNIST dataset, the results are illustrated in table \ref{tab:toy_experiments}.
 
 %In table \ref{tab:quantitative_results}
 
