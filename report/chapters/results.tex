@@ -120,7 +120,7 @@
 
 \begin{table}[t]
     \centering
-    \caption{Toy experiments on data augmentation}
+    \caption{Toy experiments on data augmentation.}
     \label{tab:toy_experiments}
     \begin{subtable}{0.9\textwidth}
         \begin{tabular}{|l|ll|ll|ll|ll|}
@@ -130,7 +130,7 @@
             Error rate ($\%$) & \num{32.00} & \num{3.0792} & \num{33.33333} & \num{3.399} & \num{30.666} & \num{4.38178} & \textbf{\num{28.80}} & \num{2.0221} \\
             \hline
         \end{tabular}
-        \caption{Augmenting the iris data set}
+        \caption{Augmenting the iris data set. The classifier network was trained and tested five times on data augmented by each generative model. The sample mean and unbiased sample standard devation is reported as mean and std respectively.}
     \end{subtable}
     \begin{subtable}{0.9\textwidth}
         \begin{tabular}{|l|lll|l|l|}
@@ -138,7 +138,7 @@
             \multicolumn{1}{c|}{} & Baseline 100 & Baseline 200 & Baseline 400 & VAE & AEGAN \\ \hline
             Error rate ($\%$) & \num{0.90} & \num{1.02} & \num{0.87} & \num{1.33} & \textbf{\num{0.86}} \\ \hline
         \end{tabular}
-        \caption{Augmenting the MNIST data set}
+        \caption{Augmenting the MNIST data set. The classifier was trained for 200 epochs when augmented with the generative models. Three different baselines were trained with different number of training epochs to account for the increase in training iterations per epoch during the data augmentation.}
     \end{subtable}
 \end{table}
 
