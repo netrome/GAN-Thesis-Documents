@@ -563,6 +563,38 @@
   year    = {2016},
 }
 
+@Article{ulyanovVL17adversarial,
+  author        = {Dmitry Ulyanov and Andrea Vedaldi and Victor S. Lempitsky},
+  title         = {Adversarial Generator-Encoder Networks},
+  journal       = {CoRR},
+  year          = {2017},
+  volume        = {abs/1704.02304},
+  archiveprefix = {arXiv},
+  bibsource     = {dblp computer science bibliography, https://dblp.org},
+  biburl        = {https://dblp.org/rec/bib/journals/corr/UlyanovVL17a},
+  eprint        = {1704.02304},
+  timestamp     = {Wed, 07 Jun 2017 14:42:57 +0200},
+  url           = {http://arxiv.org/abs/1704.02304},
+}
+
+@Article{kullback1951information,
+  author    = {Kullback, Solomon and Leibler, Richard A},
+  title     = {On information and sufficiency},
+  journal   = {The annals of mathematical statistics},
+  year      = {1951},
+  volume    = {22},
+  number    = {1},
+  pages     = {79--86},
+  publisher = {JSTOR},
+}
+
+@Book{heinonen2005lectures,
+  title     = {Lectures on Lipschitz analysis},
+  publisher = {University of Jyv{\"a}skyl{\"a}},
+  year      = {2005},
+  author    = {Heinonen, Juha},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
 
 @Comment{jabref-meta: grouping:
