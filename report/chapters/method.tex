@@ -132,13 +132,20 @@ The \acrfull{wgan} was adopted as a second baseline to compare against more comp
 
 The \acrshort{wgan} was constructed using the default generator and discriminator. To enforce the discriminator to be 1-Lipschitz \footnote{The relevant theory of Lipschitz analysis is presented in \parencite{heinonen2005lectures}.}, gradient penalty was used as described in \parencite{gulrajani2017improved}.
 
+\begin{figure}[t]
+    \includegraphics[width=\textwidth]{progressive_GAN_stages.pdf}
+    \caption{Structure of the convolutions in the generator network for different stages of training in the progressive \acrshort{gan}.}
+    \label{fig:prog_stages}
+\end{figure}
+
 \section{Progressive \acrshort{gan}}
 The most advanced method tested in this project was the progressive \acrshort{gan}, proposed by \textcite{karras2017progressive}. The proposed advantages of this approach over other existing \acrshort{gan} variations is two-fold. Firstly, there is reason to believe that the quality and diversity of the generated samples are improved by the progressive training. Secondly, the training stability is believed to increase. However due to the novelty of the approach and the lack of extensive evaluations of different \acrshort{gans}, it is difficult to know for sure if this is the case.
 
-The progressive \acrshort{gan} was adopted because of the proposed training stability that arises from progressivly increasing the complexity of the learned task. It was implemented using the default generator and discriminator. The training was divided in six stages, each stage producing images with four times the resoulution of the previous stage. As in the original article, each stage contained an extra 1x1 convolution to produce 2-channel images. The illustrated networks are therefore examples of stage-6 networks. To obtain a stage-5 network one should simply reshape the 1x1 convolutions and remove the two last (non 1x1) convolutions of the generator and the two first (non 1x1) convolutions of the generator.
+The progressive \acrshort{gan} was adopted because of the proposed training stability that arises from progressivly increasing the complexity of the learned task. It was implemented using the default generator and discriminator. The training was divided in six stages, each stage producing images with four times the resoulution of the previous stage. As in the original article, each stage contained an extra 1x1 convolution to produce 2-channel images. The illustrated networks are therefore examples of stage-6 networks. To obtain a stage-5 network one should simply reshape the 1x1 convolutions and remove the two last (non 1x1) convolutions of the generator and the two first (non 1x1) convolutions of the generator. Figure \ref{fig:prog_stages} shows the structure of the generator network for different stages.
 % TODO add diagram illustrating progressive GAN training
 
 As in the original article, feature normalization, minibatch discrimination and smooth fade-in of new layers was implemented as closely as possible to the original formulation.
+
 
 %\subsection{Freeze in new layers}
 %\begin{figure}[t]
