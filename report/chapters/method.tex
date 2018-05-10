@@ -13,14 +13,21 @@ The benefit of this approach is that the relative magnitutes of the errors obtai
 %The benefit of this approach is that the cross-data localization error can easily be compared to the intra-data localization error. The relative magnitutes of these losses indicate the difficulties of adapting models between the domains. This enables not only giving a binary answer to the original question of this project but showing how close to succeeding the tested methods are in learning the data distribution.
 
 \section{Synthetic Data}
-The initial experiments in this project are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution 256x256 were generated, a training set consisting of 3000 images and a test set of 300 images. For reproducibility, these data sets will become publicly available at the time of publication.
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/misc/2-channel_img_example2.pdf}
+    \caption{Example of how a $256\times256$ image can be concatenated together with a segmentation map corresponding to the pupil to form a single 2-channel image.}
+    \label{fig:2channels}
+\end{figure}
 
-The synthetic data sets are fully annotated with automatically generated ground truth labels. The relevant labels for the experiments are converted to heatmaps when loaded for training and evaluation as in most cases of semantic segmentation \parencite{guo2017review}. These heatmaps are thereafter concatenated with the real images, forming feature maps with the dimensions: 2x320x320. By viewing the annotations as a part of the data, unsupervised models that learn the data distribution implicitly learn the relationships between the annotations and the images.
+The initial experiments in this project are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution $256\times256$ were generated, a training set consisting of 3000 images and a test set of 300 images. For reproducibility, these data sets will become publicly available at the time of publication.
+
+The synthetic data sets are fully annotated with automatically generated ground truth labels. The relevant labels for the experiments are converted to heatmaps when loaded for training and evaluation as in most cases of semantic segmentation \parencite{guo2017review}. These heatmaps are thereafter concatenated with the real images, forming feature maps with the dimensions: $2\times256\times256$. By viewing the annotations as a part of the data, unsupervised models that learn the data distribution implicitly learn the relationships between the annotations and the images.
 
 \section{Real World Data}
 A propiretary data set was used to further evaluate the methods. The data set consits of 9605 different manually annotated recordings of human subjects looking at a screen, split into a training set of 1000 recordings and a test set of 8605 recordings. Each recording consists of a set of \acrfull{roi} images of the eye region of the subjects. 
 
-To adapt this data to the Pupil Regression framework, the images were cropped to 256x256 patches around the eyes. The cropping was random and ensured that the images always contained a pupil. In practical cases it would be sensible to center the pupil in all images. For this purpose however, such a cropping would cause the networks to learn undesired patterns such as always producing trivial predictions in the center of the image. Therefore the center of the pupil was positioned randomly in the image during the cropping. 
+To adapt this data to the Pupil Regression framework, the images were cropped to $256\times256$ patches around the eyes. The cropping was random and ensured that the images always contained a pupil. In practical cases it would be sensible to center the pupil in all images. For this purpose however, such a cropping would cause the networks to learn undesired patterns such as always producing trivial predictions in the center of the image. Therefore the center of the pupil was positioned randomly in the image during the cropping. 
 
 During data sampling, the probabilites of the individual images were weighted in such a way that the separate recordings were equally probable to appear. This prevents recordings with more images to be over represented during training, which otherwise could cause the models to become skewed to the conditions of these recordings.
 
