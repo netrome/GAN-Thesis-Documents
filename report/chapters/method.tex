@@ -13,16 +13,30 @@ The benefit of this approach is that the relative magnitutes of the errors obtai
 %The benefit of this approach is that the cross-data localization error can easily be compared to the intra-data localization error. The relative magnitutes of these losses indicate the difficulties of adapting models between the domains. This enables not only giving a binary answer to the original question of this project but showing how close to succeeding the tested methods are in learning the data distribution.
 
 \section{Synthetic Data}
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{images/misc/2-channel_img_example2.pdf}
-    \caption{Example of how a $256\times256$ image can be concatenated together with a segmentation map corresponding to the pupil to form a single 2-channel image.}
+    \caption{Example of how a $256\times256$ image can be concatenated together with a segmentation map to form a single 2-channel image. The segmentation map in this case corresponds to the pupil in the image.}
     \label{fig:2channels}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{images/misc/GAN_illustration_for_methods.pdf}
+    \caption{Example of a \acrshort{gan} where the generator generates a 2-channel image and the discriminator distinguishes fake 2-channel images from real ones. The training procedure is the same as that of a normal \acrshort{gan}}
+    \label{fig:2channelsGAN}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{images/misc/VAE_illustration_for_methods.pdf}
+    \caption{Example of a \acrshort{vae} where the encoder generates a probability distribution in the latent space conditioned on a 2-channel image and the decoder maps a latent vector to a conditional probability distribution over 2-channel images.}
+    \label{fig:2channelsVAE}
 \end{figure}
 
 The initial experiments in this project are performed on synthetic data obtained through rendering of a 3D head model in a data generation framework. This framework is based on the work of \textcite{swirski2014rendering} and utilizes the same head rig. Two data sets with resolution $256\times256$ were generated, a training set consisting of 3000 images and a test set of 300 images. For reproducibility, these data sets will become publicly available at the time of publication.
 
-The synthetic data sets are fully annotated with automatically generated ground truth labels. The relevant labels for the experiments are converted to heatmaps when loaded for training and evaluation as in most cases of semantic segmentation \parencite{guo2017review}. These heatmaps are thereafter concatenated with the real images, forming feature maps with the dimensions: $2\times256\times256$. By viewing the annotations as a part of the data, unsupervised models that learn the data distribution implicitly learn the relationships between the annotations and the images.
+The synthetic data sets are fully annotated with automatically generated ground truth labels. The relevant labels for the experiments are converted to heatmaps when loaded for training and evaluation as in most cases of semantic segmentation \parencite{guo2017review}. These heatmaps are thereafter concatenated with the real images, forming feature maps with the dimensions: $2\times256\times256$. An example of this procedure is illustrated in figure \ref{fig:2channels}. By viewing the annotations as a part of the data, unsupervised models that learn the data distribution implicitly learn the relationships between the annotations and the images. Figure \ref{fig:2channelsGAN} and \ref{fig:2channelsVAE} shows how to this type of data is processed in a \acrshort{vae} and a \acrshort{gan}.
 
 \section{Real World Data}
 A propiretary data set was used to further evaluate the methods. The data set consits of 9605 different manually annotated recordings of human subjects looking at a screen, split into a training set of 1000 recordings and a test set of 8605 recordings. Each recording consists of a set of \acrfull{roi} images of the eye region of the subjects. 
