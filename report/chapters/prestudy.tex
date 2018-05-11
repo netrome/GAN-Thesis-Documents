@@ -198,7 +198,7 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
         \STATE Sample minibatch of latent points from a multivariate unit gaussian $\{z_{1}, ..., z_{m}\} \sim N(0, I)$.
         \STATE Assign parameters for the latent posterior: $\mu_i, \sigma_i \leftarrow E(x_i)$
         \STATE Sample from the posterior and decode it back to the data space: $\hat{x_i} = D(\mu_i + z_i\odot\sigma_i)$, where $\odot$ represents the Hadamarad product.
-        \STATE Update the model parameters with the following gradient:
+        \STATE Update the model parameters $\theta$ with the following gradient:
         \begin{equation}
             \nonumber
             \nabla_\theta\left(\frac{1}{m}\sum_{i=1}^m\left\{|\hat{x_i} - x| + \nu(\text{ln}(\sigma_i^2) - \mu_i^2 - \sigma_i^2)\right\}\right).
@@ -207,7 +207,7 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
     \end{algorithmic}
 \end{algorithm}
 
-\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods as described in Algorithm \ref{alg:VAEbase}. An issue with this approach is that the lower bound estimates require sampling from the latent variable, which is a non-differentiable operation. \textcite{kingma2013auto} resolved this issue by introducing a reparametrization trick to enable gradients to flow through the sampling process. This is applied in Algorithm \ref{alg:VAEbase}, but will not be explained in detail in this report for brevity. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
+\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods, an example of this is shown in Algorithm \ref{alg:VAEbase}. This approach requires sampling from the posterior in the latent space, which is a non-differentiable operation. However as described in the algorithm, it is possible to sample from a $N(0, I)$ distribution instead and simply transform this to the posterior using differentiable operations. \textcite{kingma2013auto} decribes the generic case in more detail. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition why this works.
 
 \subsection{\acrshort{vae} and \acrshort{gan} hybrid models}
 Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generate samples from the prior of the latent variable and uses the discriminator network as an adversarial loss function on the generated samples. 
