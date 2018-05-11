@@ -1,19 +1,19 @@
-This chapter begins by establishing the notation and the concepts that are encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by an in-depth descriptions of the families of generative modells considered in this project. Finally the concept of semi-supervised learning is introduced.
+This chapter begins by establishing the notation and the concepts encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by more detailed descriptions of the families of generative modells considered in this project. Special emphasis is put on \acrlong{gans} and its variants.
 
 \section{Concepts and Terminology}
 %This chapter deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
-This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and sets are written in mathcal ($\mathcal{Z}$), stochastic variables are written as uppercase letters ($Z$), vectors are written as lower case letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions.
+This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and sets are written in mathcal ($\mathcal{Z}$), stochastic variables are written as uppercase letters ($Z$), vectors are written as lower case letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions. 
 
 \section{Generative models}
 \begin{figure}[t]
     \centering
     \includegraphics[width=0.5\textwidth]{graphicalModel.pdf}
-    \caption{The directed graphical model representing the dependency between the latent variable $Z$ and the data variable $X$ in \acrshort{gans}. This is the same dependency structure as in GMMs and \acrshort{vaes}.}
+    \caption{The directed graphical model representing the dependency between the latent variable $Z$ and the data variable $X$ in \acrshort{gans}. This is the same dependency structure as in GMMs and \acrshort{vaes}. The color coding is consistent with that of \textcite{christopher2016pattern}, where colored cells represent latent variables and non-colored cells are observable variables. The arrow represents a causal dependency.}
     \label{fig:GANgraph}
 \end{figure}
 In this thesis, the term generative model refers to models that explicitly or implicitly represent the data distribution thereby allowing sampling from the modelled distribution. This is different from discriminative models which only model information that can be extracted from the data. 
 
-This thesis focuses on parametric generative models which gan be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
+This thesis focuses on parametric generative models which can be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
 
 %Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
 
@@ -36,11 +36,11 @@ In practice $G^{-1}$ is intractable to compute, whereby explicit probabilities a
 
 The goal of training \acrshort{gans} is to learn a probability distribution over the data. By viewing the elements of $\dataset$ as outcomes of a random variable $S$ with probability distribution $p_S$ the goal of the generator is to approximate this distribution with $p_G$, and the goal of the discriminator is to discriminate between these distributions. Using this formulation the objective of the \acrshort{gan} training can be formulated as a minimax game 
 \begin{equation}
-    \min_G \max_D -J^{D}(G, D)
+    \min_G \max_D V^{D}(G, D)
 \end{equation}
-where $J^D(G, D)$ is the discriminator cost function from \parencite{goodfellow2016nips},
+where $V^D(G, D)$ is the discriminator value function from \parencite{goodfellow2016nips},
 \begin{equation}
-    J^D(G, D) = -\frac{1}{2}\mathbb{E}_{x \sim p_S, z \sim p_Z}\left[\log(D(x)) + \log(1 - D(G(z))) \right].
+    V^D(G, D) = \frac{1}{2}\mathbb{E}_{x \sim p_S, z \sim p_Z}\left[\log(D(x)) + \log(1 - D(G(z))) \right].
     \label{eq:GANcost}
 \end{equation}
 %\begin{equation}
@@ -59,16 +59,16 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
     \begin{algorithmic}[1]
         \FOR{number of iterations}
         \FOR{$n_D$ steps do}
-        \STATE sample minibatch of fake data $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
-        \STATE sample minibatch of real data $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
-        \STATE update discriminator parameters with the estimated gradient of the cost function
+        \STATE Sample minibatch of fake data $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
+        \STATE Sample minibatch of real data $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
+        \STATE Update discriminator parameters with the estimated gradient of the value function
         \begin{equation}
             \nonumber
-            \nabla_{\theta_D} \left( -\frac{1}{m}\sum_{i=1}^m\log(D(x_i)) + \log(1-D(x_{fi})) \right).
+            \nabla_{\theta_D} \left( \frac{1}{m}\sum_{i=1}^m\log(D(x_i)) + \log(1-D(x_{fi})) \right).
         \end{equation}
         \ENDFOR
-        \STATE sample minibatch of fake images $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
-        \STATE update generator parameters with the estimated gradient of the negative cost function
+        \STATE Sample minibatch of fake images $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
+        \STATE Update generator parameters with the estimated gradient of the negative value function
         \begin{equation}
             \nonumber
             \nabla_{\theta_G} \left( - \frac{1}{m}\sum_{i=1}^m\log(1-D(x_{fi})) \right).
@@ -137,7 +137,7 @@ In this framework, the generator is trained to simultaneously produce data point
 %Can utilize the latent space.
 
 \subsubsection{Wasserstein GAN}
-A popular alternative to the original \acrshort{gan} is the Wasserstein \acrshort{gan}. It was proposed n 2017 by \textcite{arjovsky2017wasserstein}. The distinguishing feature of the Wasserstein \acrshort{gan} is that instead of minimizing the Jensen-Shannon divergence it minimizes the Wasserstein-1, or Earth-Mover EM, distance 
+A popular alternative to the original \acrshort{gan} is the Wasserstein \acrshort{gan}. It was proposed in 2017 by \textcite{arjovsky2017wasserstein}. The distinguishing feature of the Wasserstein \acrshort{gan} is that instead of minimizing the Jensen-Shannon divergence it minimizes the Wasserstein-1, or Earth-Mover EM, distance 
 \begin{equation}
     W(p_S, p_G) = \inf_{\gamma \Pi (p_S, p_G)} \mathbb{E}_{(x, y) \sim \gamma} \left[|x-y|\right],
 \end{equation}
@@ -150,27 +150,27 @@ under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wassers
 %\subsubsection{BEGAN}
 %\subsubsection{DRAGAN}
 \subsubsection{Progressive GAN}
-\textcite{karras2017progressive} proposed a novel training methodology for \acrshort{gans} to address the stability and variability issues with these models when trained to generate images. The proposed methodology regards the network architectures during training and can be combined with many of the other \acrshort{gan} variants seamlessly. Instead of training a fixed-size discriminator and generator it is proposed to progressively grow their size during training by gradually increase the resolution of the training data. Since training on higher resolution images is much more difficult that on low resolution images, this method conceptually acts as iteratively reusing a simpler network as a sensible initialization for the next higher-resolution network. It can also be veiwed as a multi-step transfer learning process. This approach demonstrated high-quality diverse fake samples on a 1028x1028 version of the CELEBA (write this in better font) dataset. 
+\textcite{karras2017progressive} proposed a novel training methodology for \acrshort{gans} to address the stability and variability issues with these models when trained to generate images. The proposed methodology regards the network architectures during training and can be combined with many of the other \acrshort{gan} variants seamlessly. Instead of training a fixed-size discriminator and generator it is proposed to progressively grow their size during training by gradually increasing the resolution of the training data. Since training on higher resolution images is much more difficult that on low resolution images, this method conceptually acts as iteratively reusing a simpler network as a sensible initialization for the next higher-resolution network. It can also be veiwed as a multi-step transfer learning process. This approach demonstrated high-quality diverse fake samples on a $1028\times1028$ version of the CELEBA (write this in better font) dataset. 
 
 Besides the progressive growing of \acrshort{gans}, \textcite{karras2017progressive} also suggest two improvements that can be applied on other variants as well. They propose weight equalization to address the issue of training deep networks with weights that have different dynamic range. They propose using a pixelwise normalization of the feature maps instead of batch normalization to prevent escalation of signal magnitudes between the networks.
 
 \subsection{Evaluation measures}
 The goal of \acrshort{gans} is to model a target distribution and they are often trained on high-dimensional complex data sets. Due to the nature of this setup and the observation that explicit probabilities are unobtainable for both the true data distribution and the modeled distribution, these models are difficult to evaluate. Two popular quantitative measures for evaluating the performance of \acrshort{gans} are the \acrfull{is} \parencite{salimans2016improved} and the \acrfull{fid} scores \parencite{heuselRUNKH2017FID}.
 
-The \acrlong{is} metric was defined as an alternative to having human annotators asses the quality of visual samples. It is defined as 
+The \acrlong{is} metric was defined as an alternative to having human annotators assess the quality of visual samples. It is defined as 
 \begin{equation}
-    \exp (\mathbb{E}(D_{KL}(p(Y|X) || p(Y))))
+    \exp \left(\,\mathbb{E}\left[\;D_{KL}\left(\,p(Y|X) || p(Y)\,\right)\;\right]\,\right)
 \end{equation}
-where $p(Y|X)$ is the class conditional probability distribution obtained through a pretrained inception network and $p(Y)$ is obtained through marginalization. 
+where $p(Y|X)$ is the class conditional probability distribution obtained through a pretrained Inception network, $p(Y)$ is obtained through marginalization and $D_{KL}$ is the Kullback-Leibler Divergence.
 
-The \acrlong{fid} metric is a proposed improvement over the \acrlong{is}. Unlike the \acrlong{is}, the \acrlong{fid} metric measures the distance between the learned data distribution and the true distribution. It does so by computing the Frechét distance (Wasserstein-2 distance) between inception encodings of the true data distribution and the fake data distribution.
+The \acrlong{fid} metric is a proposed improvement over the \acrlong{is}. Unlike the \acrlong{is}, the \acrlong{fid} metric measures the distance between the learned data distribution and the true distribution. It does so by computing the Frechét distance (Wasserstein-2 distance) between Inception encodings of the true data distribution and the fake data distribution.
 
 These measures have been shown to correspond to increased quality and diversity of generated samples but do still inherently suffer from the limitations imposed by the abscence of explicit probability distributions. For an example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that generator completely avoid generating ones with serifs despite the high frequency of serifed ones in the data set. This skew in data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original data set. Similar examples for the \acrshort{fid} have not been discovered during the course of this project. 
 
 In specific applications, the quality of the generated samples can be evaluated indirectly based on the application of the data. \textcite{shrivastava2016learning} used this approach to compare the quality of a generated data set against the real data alone for gaze estimation. This approach does not guarantee correspondence between visually pleasing samples and generated samples and does not allow the results to be compared with similar \acrshort{gans} in a different domain. However it is appealing in the sense that it brings the quantitative evaluation of the models closer to the targeted application. 
 
 \subsection{Evaluation issues}
-Besides the difficulties in finding quantitative evaluation measures, \acrshort{gans} are vere sensitive to hyperparameter setting and it is difficult to assess if improved results are caused by better hyperparameters or improved methods. This was demonstrated in a recent work by \textcite{lucic2017gans}, where a large scale evaluation of some of the state-of-the-art variants was performed. It was observed that similar results could be obtained for all the models as a result of enough random restarts and hyperparameter optimization.
+Besides the difficulties in finding quantitative evaluation measures, \acrshort{gans} are vere sensitive to hyperparameter settings and it is difficult to assess if improved results are caused by better hyperparameters or improved methods. This was demonstrated in a recent work by \textcite{lucic2017gans}, where a large scale evaluation of some of the state-of-the-art variants was performed. It was observed that similar results could be obtained for all the models as a result of enough random restarts and hyperparameter optimization.
 
 In parallel with the empirical comparisons of different \acrshort{gans} theoretical arguments regarding the objective of these models are taking place. \textcite{arjovsky2017towards} introduced the divergence that the NSGAN minimizes, and argues why this causes mode collapse and convergence issues. The view on the training of \acrshort{gans} as minimization of a divergence have subsequently been critizised as overly restrictive, and empirical counterexamples have been presented to challenge this view \textcite{fedus2017many}.
 
@@ -178,7 +178,7 @@ In parallel with the empirical comparisons of different \acrshort{gans} theoreti
 \section{\acrlong{vaes}}
 Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
 
-These models consists of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(X)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}.
+These models consist of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(X)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}.
 
 The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the optimal variational parameters. It is a type of approximate variational inference and consists of gradient based optimization of an estimatior of the variational lower bound of the marginal likelihood of the data under the current model. In the original article the authors propose the two estimators based on Monte Carlo estimates of expectations:
 \begin{equation}
