@@ -19,7 +19,7 @@ This thesis focuses on parametric generative models which can be formulated as i
 
 \section{\acrlong{gans}}
 
-\begin{figure}
+\begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{GANcomponents.pdf}
     \caption{The main components of \acrshort{gans}}
@@ -178,7 +178,14 @@ In parallel with the empirical comparisons of different \acrshort{gans} theoreti
 \section{\acrlong{vaes}}
 Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
 
-These models consist of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(X)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}.
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{VAEcomponents.pdf}
+    \caption{The main components of \acrshort{vaes}}
+    \label{fig:VAE}
+\end{figure}
+
+These models consist of an i.i.d. data set $\dataset$ and a continous latent variable $Z$ in a latent space $\latentspace$. The data set is viewed as a set of outcomes of a random variable $S$ as previously. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(X)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}. This is illustrated in figure \ref{fig:VAE}.
 
 The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the optimal variational parameters. It is a type of approximate variational inference and consists of gradient based optimization of an estimatior of the variational lower bound of the marginal likelihood of the data under the current model. In the original article the authors propose the two estimators based on Monte Carlo estimates of expectations:
 \begin{equation}
@@ -213,6 +220,7 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
 Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generate samples from the prior of the latent variable and uses the discriminator network as an adversarial loss function on the generated samples. 
 
 The similarity of these approaches allows different methods of combining the benefits of both approaches. The most straightforward approach of training a \acrshort{vae} with an adversarial loss function was performed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
+
 
 % \section{Semi-supervised learning}
 % \begin{figure}
