@@ -46,9 +46,15 @@ The synthetic data sets are fully annotated with automatically generated ground 
 
 
 \section{Real World Data}
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{images/misc/roi_to_crop.pdf}
+    \caption{A roi image and a corresponding $256\times256$ crop of the right eye illustrating the processing of the real world data.}
+    \label{fig:roitocrop}
+\end{figure}
 A propiretary data set was used to further evaluate the methods. The data set consists of $9605$ different manually annotated recordings of human subjects looking at a screen, split into a training set of $1000$ recordings and a test set of $8605$ recordings. Each recording consists of a set of \acrfull{roi} images of the eye region of the subjects. 
 
-To adapt this data to the Pupil Regression framework, the images were cropped to $256\times256$ patches around the eyes. The cropping was random and ensured that the images always contained a pupil. In practical cases it would be sensible to center the pupil in all images. For this purpose however, such a cropping would cause the networks to learn undesired patterns such as always producing trivial predictions in the center of the image. Therefore the center of the pupil was positioned randomly in the image during the cropping. 
+To adapt this data to the Pupil Regression framework, the images were cropped to $256\times256$ patches around the eyes. An example crop together with its corresponding \acrshort{roi} image is show in figure \ref{fig:roitocrop}. The cropping was random and ensured that the images always contained a pupil. In practical cases it would be sensible to center the pupil in all images. For this purpose however, such a cropping would cause the networks to learn undesired patterns such as always producing trivial predictions in the center of the image. Therefore the center of the pupil was positioned randomly in the image during the cropping. 
 
 During data sampling, the probabilites of the individual images were weighted in such a way that the separate recordings were equally probable to appear. This prevents recordings with more images to be over represented during training, which otherwise could cause the models to become skewed to the conditions of these recordings.
 
