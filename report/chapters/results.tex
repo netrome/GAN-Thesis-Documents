@@ -10,7 +10,7 @@
         \caption{Fade in new layers}
         \label{fig:freezeInDG2}
     \end{subfigure}
-    \caption{Discriminator output on real and fake images during transition between 16x16 and 32x32 resolution images for the different transition strategies on the synthetic data set.}
+    \caption{Discriminator output on real and fake images during transition between $16\times16$ and $32\times32$ resolution images for the different transition strategies on the synthetic data set when training the progressive \acrshort{gan}. It can be seen that the difference between the predictions increase rapidly during the end of the fade-in period whereas they remain much more stable during the weight freezing.}
     \label{fig:fadeVsFreeze}
 \end{figure}
 
@@ -138,7 +138,7 @@
             \multicolumn{1}{c|}{} & Baseline 100 & Baseline 200 & Baseline 400 & VAE & AEGAN \\ \hline
             Error rate ($\%$) & \num{0.90} & \num{1.02} & \num{0.87} & \num{1.33} & \textbf{\num{0.86}} \\ \hline
         \end{tabular}
-        \caption{Augmenting the MNIST data set. The classifier was trained for 200 epochs when augmented with the generative models. Three different baselines were trained with different number of training epochs to account for the increase in training iterations per epoch during the data augmentation.}
+        \caption{Augmenting the MNIST data set. The classifier was trained for 200 epochs when augmented with the generative models. Three different baselines, denoted "Baseline x", were trained with different number of training epochs to account for the increase in training iterations per epoch during the data augmentation. The number in the name corresponds to the number of training epochs.}
     \end{subtable}
 \end{table}
 
@@ -217,9 +217,9 @@ The Jaccard distances for segmentation maps produced by transformers trained and
 %TODO: Undersök om AEGANv2 kan augmentera MNIST med förbättrat resultat. Kontrastera resultat mot v1 med tolkningen att v2 är mindre påverkad av sampling-bias. Samma sak bör göras med VAE. Ifall posterior-augmentering är bättre än vanlig så bör uppskalade experiment också genomföras.
 
 \section{Augmenting data for classification}
-To test the usability of the deep generative models for data augmentation for a wider scope that semantic segmentation for pupil localization, two small toy experiments were performed. For the toy experiments the problem of discrete classification was considered instead of semantic segmentation.
+To test the usability of the deep generative models for data augmentation for a wider scope than semantic segmentation for pupil localization, two small toy experiments were performed. For the toy experiments the problem of discrete classification was considered instead of semantic segmentation.
 
-In the case of discrete classification there is no obvious method for concatenating data with the annotations. On the other hand it is sensible to assume that a small peturbation of an image does not alter the class label. With this assumption the autoencoder-based methods can still be used for data augmentation\footnote{For the \acrshort{aegan}, the posterior was asserted as an isotropic gaussian with known variance, and the encoder ouptut was interpreted as the mean.}. Instead of sampling the latent points for the new data from the prior distribution $P(Z)$, they are sampled from the posterior $P(Z|X=x)$ yielding new data points. This procedure was tested on the MNIST and iris datasets. For the iris data set, only the first two features were used. The results are illustrated in table \ref{tab:toy_experiments}. %\todocomment{This prargraph feels like it came out of nowhere, \bf{edit}: I see that it is a work in progress.}
+In the case of discrete classification there is no obvious method for concatenating data with the annotations. On the other hand it is sensible to assume that a small peturbation of an image does not alter the class label. With this assumption the autoencoder-based methods can still be used for data augmentation\footnote{For the \acrshort{aegan}, the posterior was asserted as an isotropic gaussian with known variance, and the encoder ouptut was interpreted as the mean. This is analogous to the \acrshort{vae} case.}. Instead of sampling the latent points for the new data from the prior distribution $P(Z)$, they are sampled from the posterior $P(Z|X=x)$ yielding new data points. This procedure was tested on the MNIST and iris datasets. For the iris data set, only the first two features were used. The results are illustrated in table \ref{tab:toy_experiments}. %\todocomment{This prargraph feels like it came out of nowhere, \bf{edit}: I see that it is a work in progress.}
 
 %In table \ref{tab:quantitative_results}
 
