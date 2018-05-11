@@ -190,18 +190,18 @@ The \acrshort{aevb} algorithm is applied to learn the generative model parameter
 \end{equation}
 
 \begin{algorithm}
-    \caption{Example of a training scheme for \acrlong{vaes}. This algorithm assumes that the encoder posterior probabilities are modeled as a multivariate gaussian distribution with diagonal covariance and the decoder posterior is an isotropic multivariate laplace distribution with known variance. $E(x)$ and $D(z)$ correspond to the encoder and decoder functions. The encoder outputs a vector of mean values and standard deviations for the multivariate gaussian, whereas the decoder only outputs the mean values. $\lambda$ and $\nu$ are taken as hyperparameters.}
+    \caption{Example of a training scheme for \acrlong{vaes}. This algorithm assumes that the encoder posterior probabilities are modeled as a multivariate gaussian distribution with diagonal covariance and the decoder posterior is an isotropic multivariate laplace distribution with known variance. $Enc(x)$ and $Dec(z)$ correspond to the encoder and decoder functions. The encoder outputs a vector of mean values and standard deviations for the multivariate gaussian, whereas the decoder only outputs the mean values. $\lambda$ and $\nu$ are taken as hyperparameters.}
     \label{alg:VAEbase}
     \begin{algorithmic}[1]
         \FOR{number of iterations}
         \STATE Sample minibatch of data points $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
         \STATE Sample minibatch of latent points from a multivariate unit gaussian $\{z_{1}, ..., z_{m}\} \sim N(0, I)$.
-        \STATE Assign parameters for the latent posterior: $\mu_i, \sigma_i \leftarrow E(x_i)$
-        \STATE Sample from the posterior and decode it back to the data space: $\hat{x_i} = D(\mu_i + z_i\odot\sigma_i)$, where $\odot$ represents the Hadamarad product.
+        \STATE Assign parameters for the latent posterior: $\mu_i, \sigma_i \leftarrow Enc(x_i)$
+        \STATE Sample from the posterior and decode it back to the data space: $\hat{x_i} = Dec(\mu_i + z_i\odot\sigma_i)$, where $\odot$ represents the Hadamarad product.
         \STATE Update the model parameters $\theta$ with the following gradient:
         \begin{equation}
             \nonumber
-            \nabla_\theta\left(\frac{1}{m}\sum_{i=1}^m\left\{|\hat{x_i} - x| + \nu(\text{ln}(\sigma_i^2) - \mu_i^2 - \sigma_i^2)\right\}\right).
+            \nabla_\theta\left(\frac{1}{m}\sum_{i=1}^m\left\{|\hat{x_i} - x|_1 + \nu(\text{ln}(\sigma_i^2) - \mu_i^2 - \sigma_i^2)\right\}\right).
         \end{equation}
         \ENDFOR
     \end{algorithmic}
