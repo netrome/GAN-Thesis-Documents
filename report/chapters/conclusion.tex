@@ -3,6 +3,9 @@ This study has shown that deep generative models can be applied to generate synt
 The scope of this study was limited in terms of time and computational resources, and therefore several questions still remain to be answered. Notwithstanding these limitations, this study strenghtens the idea that synthetic data sets can be used as drop-in replacements for existing data sets and it lays the groundwork for future research into generating usable data with deep generative models.
 
 \section{Future work}
+Since this project was of an exploratory nature, more emphasis were put on testing different models on different data sets than exploring the performance of a single model under specific circumstances. More research using controlled experiments is needed to further evaluate how much it is possible to improve the performance on MNIST and other datasets using this type of data augmentation. More broadly, research is also needed to determine which deep generative models are most suitable for data augmentation due to the fact that many models remain untested and the current experiments are not sufficient to claim that one model is better than another in general.
+
+Further research might also explore to what extent the choice of discriminative model affects the evaluation of the generative models. This could shed some light on how to improve the evaluation in order to find the best generative models for a given task. A natural progression on this is to test whether the best generative models for one task perform the best when the task is changed, for example test if the best generated dataset for training a pupil localizer also is the best dataset when training a gaze estimator.
 %TODO: Write stuff here if I want to.
 
 % Explore more models
