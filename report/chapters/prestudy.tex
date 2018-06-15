@@ -1,4 +1,4 @@
-This chapter begins by establishing the notation and the concepts encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by more detailed descriptions of the families of generative models considered in this project. Special emphasis is put on \acrlong{gans} and its variants.
+This chapter begins by establishing the notation and the concepts encountered in this chapter. Thereafter, a brief overview of generative models is provided. This is followed by more detailed descriptions of the families of generative models considered in this project. Special emphasis is put on \acrlong{gans} and its variants.
 
 \section{Concepts and terminology}
 This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and sets are written in a calligraphic style ($\mathcal{Z}$), stochastic variables (and vectors) are written as uppercase letters ($Z$), vectors are written as lowercase letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions. 
@@ -15,6 +15,48 @@ In this thesis, the term generative model refers to models that explicitly or im
 This thesis focuses on parametric generative models which can be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The focus of this work is directed towards models that are applicable on large, high-dimensional and complex datasets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these models assume a dependency between a latent variable $Z$ and an observed variable $X$ as shown in Figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
 
 %Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
+\section{\acrlong{vaes}}
+A popular family of generative models are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\textwidth]{VAEcomponents.pdf}
+    \caption{The main components of \acrshort{vaes}}
+    \label{fig:VAE}
+\end{figure}
+
+These models consist of a dataset $\dataset$ with i.i.d samples and a continous latent variable $Z$ in a latent space $\latentspace$. The dataset is viewed as a set of outcomes of a random variable $S$. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(Z)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}. This is illustrated in figure \ref{fig:VAE}.
+
+The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the optimal variational parameters. It is a type of approximate variational inference and consists of a gradient based optimization of an estimatior of the variational lower bound of the marginal likelihood of the data under the current model. In the original article the authors propose the two estimators based on Monte Carlo estimates of expectations:
+\begin{equation}
+    \label{eq:VAEstimators}
+    \begin{aligned}
+        \mathcal{L}^A = \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}) - \log q_\phi (Z=z^{(i, l)} | X=x^{(i)}) , \\
+        \mathcal{L}^B = - D_{KL}(q_\phi (Z | X=x^{(i)}) || p_\theta(Z=z)) + \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}).
+    \end{aligned}
+\end{equation}
+
+\begin{algorithm}
+    \caption{Example of a training scheme for \acrlong{vaes}. This algorithm assumes that the encoder posterior probabilities are modeled as a multivariate gaussian distribution with diagonal covariance and the decoder posterior is an isotropic multivariate laplace distribution with known variance. $Enc(x)$ and $Dec(z)$ correspond to the encoder and decoder functions. The encoder outputs a vector of mean values and standard deviations for the multivariate gaussian, whereas the decoder only outputs the mean values. $\lambda$ and $\nu$ are taken as hyperparameters.}
+    \label{alg:VAEbase}
+    \begin{algorithmic}[1]
+        \FOR{number of iterations}
+        \STATE Sample minibatch of data points $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
+        \STATE Sample minibatch of latent points from a multivariate unit Gaussian $\{z_{1}, ..., z_{m}\} \sim N(0, I)$.
+        \STATE Assign parameters for the latent posterior: $\mu_i, \sigma_i \leftarrow Enc(x_i)$
+        \STATE Sample from the posterior and decode it back to the data space: $\hat{x_i} = Dec(\mu_i + z_i\odot\sigma_i)$, where $\odot$ represents the Hadamard product.
+        \STATE Update the model parameters $\theta$ with the following gradient:
+        \begin{equation}
+            \nonumber
+            \nabla_\theta\left(\frac{1}{m}\sum_{i=1}^m\left\{|\hat{x_i} - x|_1 + \nu(\text{ln}(\sigma_i^2) - \mu_i^2 - \sigma_i^2)\right\}\right).
+        \end{equation}
+        \ENDFOR
+    \end{algorithmic}
+\end{algorithm}
+
+\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods, an example of this is shown in Algorithm \ref{alg:VAEbase}. This approach requires sampling from the posterior in the latent space, which is a non-differentiable operation. However, as described in the algorithm, it is possible to sample from a $N(0, I)$ distribution instead and simply transform this to the posterior using differentiable operations. \textcite{kingma2013auto} describe the generic case in more detail. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition as to why this works.
+
+
 
 \section{\acrlong{gans}}
 
@@ -45,7 +87,7 @@ where $V^D(G, D)$ is the discriminator value function from \parencite{goodfellow
 %\begin{equation}
 %    \mathcal{L}(x_1, x_2) = -\log(D(x)) + \log(D(x_2)), \quad \begin{cases} x \in X \\ z \in \latentspace \end{cases}.
 %\end{equation}
-Since both the generator and discriminator are differentiable functions, (\ref{eq:GANcost}) can be optimized using standard gradient based optimization schemes such as RMSprop \parencite{tieleman2012lecture} or Adam \parencite{kingma2014adam}. Typically the networks are updated in an alternating fashion where the parameters of one of the networks are frozen while updating the other network. The expectectations in (\ref{eq:GANcost}) are typically estimated using minibatches as 
+Since both the generator and discriminator are differentiable functions, (\ref{eq:GANcost}) can be optimized using standard gradient based optimization schemes such as RMSprop \parencite{tieleman2012lecture} or Adam \parencite{kingma2014adam}. Typically, the networks are updated in an alternating fashion where the parameters of one of the networks are frozen while updating the other network. The expectectations in (\ref{eq:GANcost}) are typically estimated using minibatches as 
 \begin{equation}
     \mathbb{E}_{x\sim p(x)}[f(x)] \approx \frac{1}{m}\sum_{i=1}^mf(x_i)
 \end{equation}
@@ -88,16 +130,16 @@ A straightforward implication of this is that when $G$ is optimal, the optimal $
 \begin{equation}
     p_G \eqdist p_S \implies D(x) = 0.5 \; \forall x \sim p_G, p_S
 \end{equation}
-if $D$ and $G$ are optimal. It is also proved in the original paper that given an optimal discriminator there exists a global minimum of the discriminator value function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is also proven.
+if $D$ and $G$ are optimal. It is also proved in the original paper that given an optimal discriminator there exists a global minimum of the discriminator value function and it is reached if and only if $p_G \eqdist p_S$. Finally, convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is also proven.
 
-This means that one can observe convergence when training \acrshort{gans} by following the development of the discriminator output. When it saturates at $0.5$ for all generator samples and real samples, the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
+This means that one can observe convergence when training \acrshort{gans} by following the development of the discriminator output. When it saturates at $0.5$ for all generator samples and real samples, the algorithm has converged. In practice, it is difficult to get to this point with complex sets of high-dimensional data.
 
 \subsection{Practical issues}
-The theoretical properties indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing these models in practice some issues emerge from using models of finite capacity. 
+The theoretical properties indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However, when implementing these models in practice some issues emerge from using models of finite capacity. 
 
-The two-player minimax formulation of the game results in a notoriously difficult training scenario. The update of one player may undo progress of the other player instead of moving towards the Nash equilibrium\footnote{Nash equilibrium is the point where neither the discriminator nor the generator can improve their performance by only updating their own parameters}. Therefore regular gradient descent is not guaranteed to converge but can just as easily get stuck in a stale orbit (\textcite{salimans2016improved}). It is also common that the generator learns to represent a subset of the original data realistically while ignoring the vast majority of the data points, thereby collapsing to a specific "mode" of the data. This phenomenon is known as mode collapse.
+The two-player minimax formulation of the game results in a notoriously difficult training scenario. The update of one player may undo progress of the other player instead of moving towards the Nash equilibrium\footnote{Nash equilibrium is the point where neither the discriminator nor the generator can improve their performance by only updating their own parameters}. Therefore, regular gradient descent is not guaranteed to converge but can just as easily get stuck in a stale orbit (\textcite{salimans2016improved}). It is also common that the generator learns to represent a subset of the original data realistically while ignoring the vast majority of the data points, thereby collapsing to a specific "mode" of the data. This phenomenon is known as mode collapse.
 
-Another issue encountered when implementing \acrshort{gans} emerges from the limitations of representing a continous distribution with a finite dataset. Even though the theoretical results guarantee that $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the dataset $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the dataset. An example for this is using the generator as a proxy for the dataset during training or evaluation of another neural network.
+Another issue encountered when implementing \acrshort{gans} emerges from the limitations of representing a continous distribution with a finite dataset. Even though the theoretical results guarantee that $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the dataset $\dataset$. Therefore, the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the dataset. An example for this is using the generator as a proxy for the dataset during training or evaluation of another neural network.
  
 \subsection{Different types of \acrshort{gans}}
 Since the introduction of \acrshort{gans}, several variations and extensions have been proposed to overcome the convergence problems and stability issues of the models. The most relevant variations for this work are outlined in this section.
@@ -117,7 +159,7 @@ In an attempt to bring the success of \acrfull{cnns} from supervised to unsuperv
     \item Use ReLU as an activation function in the generator and LeakyReLU \parencite{maas2013rectifier} in the discriminator.
 \end{itemize}
 
-Subsequent research have shown alternatives to some of these guidelines. For example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{salimans2016improved}. To circumvent the issues of Batch Normalization, tweaked versions of the original formulations have been proposed such as Reference Batch Normalization and Virtual Batch Normalization. Moreover it has been increasingly common to apply alternative normalization schemes, such as performing pixelwise normalization over individual feature maps \parencite{karras2017progressive}, normalizing weight tensors with their largest singular value \parencite{miyato2017spectral} and decoupling the norm and direction of weight tensors \parencite{NIPS2016weightnorm, xiang2017effects}.
+Subsequent research have shown alternatives to some of these guidelines. For example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{salimans2016improved}. To circumvent the issues of Batch Normalization, tweaked versions of the original formulations have been proposed such as Reference Batch Normalization and Virtual Batch Normalization. Moreover, it has been increasingly common to apply alternative normalization schemes, such as performing pixelwise normalization over individual feature maps \parencite{karras2017progressive}, normalizing weight tensors with their largest singular value \parencite{miyato2017spectral} and decoupling the norm and direction of weight tensors \parencite{NIPS2016weightnorm, xiang2017effects}.
 
 In recent \acrshort{gan} formulations, it has been increasingly common to apply the LeakyReLU activation function in both networks and not just in the discriminator. 
 
@@ -153,8 +195,14 @@ under the constraint that $D$ is Lipschitz smooth. \textcite{arjovsky2017wassers
 
 Besides the progressive growing of \acrshort{gans}, \textcite{karras2017progressive} also suggest two improvements that can be applied to other variants as well. They propose weight equalization to address the issue of training deep networks with weights that have different dynamic range. They propose using a pixelwise normalization of the feature maps instead of batch normalization to prevent escalation of signal magnitudes between the networks.
 
+\subsection{\acrshort{vae} and \acrshort{gan} hybrid models}
+Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn by using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generate samples from the prior of the latent variable and use the discriminator network as an adversarial loss function on the generated samples. 
+
+The similarity of these approaches allows different methods of combining the benefits of both approaches. Perhaps the most straightforward approach of training a \acrshort{vae} with an adversarial loss function was proposed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
+
+
 \subsection{Evaluation measures}
-The goal of \acrshort{gans} is to model a target distribution and they are often trained on high-dimensional datasets of high complexity. Due to the nature of this setup and the observation that explicit probabilities are unobtainable for both the true data distribution and the modeled distribution, these models are difficult to evaluate. Two popular quantitative measures for evaluating the performance of \acrshort{gans} are the \acrfull{is} \parencite{salimans2016improved} and the \acrfull{fid} scores \parencite{heuselRUNKH2017FID}.
+The goal of \acrshort{gans} and \acrshort{vaes} is to model a target distribution and they are often trained on high-dimensional datasets of high complexity. Due to the nature of this setup and the observation that explicit probabilities are unobtainable for both the true data distribution and the modeled distribution, these models are difficult to evaluate. Two popular quantitative measures for evaluating the performance of \acrshort{gans} are the \acrfull{is} \parencite{salimans2016improved} and the \acrfull{fid} scores \parencite{heuselRUNKH2017FID}.
 
 The \acrlong{is} metric was defined as an alternative to having human annotators assess the quality of visual samples. It is defined as 
 \begin{equation}
@@ -164,61 +212,15 @@ where $p(Y|X)$ is the class conditional probability distribution obtained throug
 
 The \acrlong{fid} metric is a proposed improvement over the \acrlong{is}. Unlike the \acrlong{is}, the \acrlong{fid} metric measures the distance between the learned data distribution and the true distribution. It does so by computing the Frechét distance between Inception encodings of the true data distribution and the fake data distribution.
 
-These measures have been shown to correspond to increased quality and diversity of generated samples but they still suffer from the limitations imposed by the absence of explicit probability distributions. For example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that the generator completely avoids generating ones with serifs despite the high frequency of seriffed ones in the dataset. This skew in data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original dataset. Similar examples for the \acrshort{fid} have not been discovered during the course of this project. 
+These measures have been shown to correspond to increased quality and diversity of generated samples, but they still suffer from the limitations imposed by the absence of explicit probability distributions. For example, \textcite{shuac2017acganisbad} showed that the ACGAN generator is biased towards learning to generate images that can easily be classified. This means that the training doesn't necessarily converge towards $p_G \eqdist p_S$. This bias was both theoretically established and experimentally verified by training an ACGAN on MNIST and observing that the generator completely avoids generating ones with serifs despite the high frequency of seriffed ones in the dataset. This skew in data distribution is not quantitatively apparent as the model was shown to still result in high \acrshort{is} values. In fact the ACGAN model obtained higher scores than the original dataset. Similar examples for the \acrshort{fid} have not been discovered during the course of this project. 
 
-In specific applications, the quality of the generated samples can be evaluated indirectly based on the application of the data. \textcite{shrivastava2016learning} used this approach to compare the quality of a generated dataset against the real data alone for the task of gaze estimation. This approach does not guarantee correspondence between visually pleasing samples and generated samples and does not allow the results to be compared with similar \acrshort{gans} in a different domain. However it is appealing in the sense that it brings the quantitative evaluation of the models closer to the targeted application. 
+In specific applications, the quality of the generated samples can be evaluated indirectly based on the application of the data. \textcite{shrivastava2016learning} used this approach to compare the quality of a generated dataset against the real data alone for the task of gaze estimation. This approach does not guarantee correspondence between visually pleasing samples and generated samples and does not allow the results to be compared with similar \acrshort{gans} in a different domain. However, it is appealing in the sense that it brings the quantitative evaluation of the models closer to the targeted application. 
 
 \subsection{Evaluation issues}
 Besides the difficulties in finding quantitative evaluation measures, \acrshort{gans} are vere sensitive to hyperparameter settings and it is difficult to assess if improved results are caused by better hyperparameters or improved methods. This was demonstrated in a recent work by \textcite{lucic2017gans}, where a large scale evaluation of some of the state-of-the-art variants was performed. It was observed that similar results could be obtained for all the models as a result of enough random restarts and hyperparameter optimization.
 
 In parallel with the empirical comparisons of different \acrshort{gans} theoretical arguments regarding the objective of these models are taking place. \textcite{arjovsky2017towards} introduced the divergence that the NSGAN minimizes, and argues why this causes mode collapse and convergence issues. The view on the training of \acrshort{gans} as minimization of a divergence have subsequently been critizised as overly restrictive, and empirical counterexamples have been presented to challenge this view \parencite{fedus2017many}.
 
-
-\section{\acrlong{vaes}}
-Another popular family of generative models besides \acrshort{gans} are \acrfull{vaes}. \acrlong{vaes} were first introduced by \textcite{kingma2013auto} as a scalable approach for stochastic variational inference. \acrshort{vaes} are trained using the \acrfull{aevb} algorithm proposed in the same article. 
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\textwidth]{VAEcomponents.pdf}
-    \caption{The main components of \acrshort{vaes}}
-    \label{fig:VAE}
-\end{figure}
-
-These models consist of a dataset $\dataset$ with i.i.d samples and a continous latent variable $Z$ in a latent space $\latentspace$. The dataset is viewed as a set of outcomes of a random variable $S$. The prior $p(Z)$ and likelihood $p(S|Z)$ are assumed to come from parametric families of distributions and the posterior $p(Z|S)$ is assumed to be intractable and is modeled by some parametric distribution. The parameters of the prior and likelihood distribution are commonly denoted as the generative model parameters $\theta$. The probabilities in the context of these model are commonly denoted as $p_\theta(Z)$, $p_\theta(X|Z)$ and $p_\theta(Z|X)$ to explicitly expose the model parameters. Since the posterior $p_\theta(Z|X)$ is assumed intractable it is estimated with a variational approximation, commonly denoted $q_\phi(Z|X)$. From the deep learning perspective, $q_\phi(Z|X)$ is commonly refered to as the \textit{encoder}, and $p_\theta(X|Z)$ is commonly referred to as the \textit{decoder}. This is illustrated in figure \ref{fig:VAE}.
-
-The \acrshort{aevb} algorithm is applied to learn the generative model parameters and infer the optimal variational parameters. It is a type of approximate variational inference and consists of a gradient based optimization of an estimatior of the variational lower bound of the marginal likelihood of the data under the current model. In the original article the authors propose the two estimators based on Monte Carlo estimates of expectations:
-\begin{equation}
-    \label{eq:VAEstimators}
-    \begin{aligned}
-        \mathcal{L}^A = \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}) - \log q_\phi (Z=z^{(i, l)} | X=x^{(i)}) , \\
-        \mathcal{L}^B = - D_{KL}(q_\phi (Z | X=x^{(i)}) || p_\theta(Z=z)) + \frac{1}{L}\sum_{l=1}^L \log p_\theta (X=x^{(i)},Z=z^{(i, l)}).
-    \end{aligned}
-\end{equation}
-
-\begin{algorithm}
-    \caption{Example of a training scheme for \acrlong{vaes}. This algorithm assumes that the encoder posterior probabilities are modeled as a multivariate gaussian distribution with diagonal covariance and the decoder posterior is an isotropic multivariate laplace distribution with known variance. $Enc(x)$ and $Dec(z)$ correspond to the encoder and decoder functions. The encoder outputs a vector of mean values and standard deviations for the multivariate gaussian, whereas the decoder only outputs the mean values. $\lambda$ and $\nu$ are taken as hyperparameters.}
-    \label{alg:VAEbase}
-    \begin{algorithmic}[1]
-        \FOR{number of iterations}
-        \STATE Sample minibatch of data points $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
-        \STATE Sample minibatch of latent points from a multivariate unit Gaussian $\{z_{1}, ..., z_{m}\} \sim N(0, I)$.
-        \STATE Assign parameters for the latent posterior: $\mu_i, \sigma_i \leftarrow Enc(x_i)$
-        \STATE Sample from the posterior and decode it back to the data space: $\hat{x_i} = Dec(\mu_i + z_i\odot\sigma_i)$, where $\odot$ represents the Hadamard product.
-        \STATE Update the model parameters $\theta$ with the following gradient:
-        \begin{equation}
-            \nonumber
-            \nabla_\theta\left(\frac{1}{m}\sum_{i=1}^m\left\{|\hat{x_i} - x|_1 + \nu(\text{ln}(\sigma_i^2) - \mu_i^2 - \sigma_i^2)\right\}\right).
-        \end{equation}
-        \ENDFOR
-    \end{algorithmic}
-\end{algorithm}
-
-\acrshort{vaes} can be trained by maximizing either of these estimates using common gradient based methods, an example of this is shown in Algorithm \ref{alg:VAEbase}. This approach requires sampling from the posterior in the latent space, which is a non-differentiable operation. However as described in the algorithm, it is possible to sample from a $N(0, I)$ distribution instead and simply transform this to the posterior using differentiable operations. \textcite{kingma2013auto} describe the generic case in more detail. The illustrations in \parencite{doersch2016tutorial} are an excellent source of intuition as to why this works.
-
-\subsection{\acrshort{vae} and \acrshort{gan} hybrid models}
-Both \acrshort{vaes} and \acrshort{gans} implicitly model the data distribution $p_S(x)$ by introducing a latent stochastic variable Z. \acrshort{vaes} model the posterior of the latent variable and learn using the KL divergence on this posterior as well as the reconstruction loss of the data after sampling. \acrshort{gans} on the other hand directly generate samples from the prior of the latent variable and use the discriminator network as an adversarial loss function on the generated samples. 
-
-The similarity of these approaches allows different methods of combining the benefits of both approaches. Perhaps the most straightforward approach of training a \acrshort{vae} with an adversarial loss function was proposed by \textcite{LarsenSW15autoencodingbeyond}. The resulting model generated sharp realistic-looking samples and allowed meaningful arithmetic to be performed in the latent space.
 
 
 % \section{Semi-supervised learning}
