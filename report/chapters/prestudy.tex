@@ -160,7 +160,7 @@ The \acrlong{is} metric was defined as an alternative to having human annotators
 \begin{equation}
     \exp \left(\,\mathbb{E}\left[\;D_{KL}\left(\,p(Y|X) || p(Y)\,\right)\;\right]\,\right)
 \end{equation}
-where $p(Y|X)$ is the class conditional probability distribution obtained through a pretrained Inception network, $p(Y)$ is obtained through marginalization and $D_{KL}$ is the Kullback-Leibler Divergence.
+where $p(Y|X)$ is the class conditional probability distribution obtained through a pretrained Inception network \parencite{szegedy2016rethinking}, $p(Y)$ is obtained through marginalization and $D_{KL}$ is the Kullback-Leibler Divergence.
 
 The \acrlong{fid} metric is a proposed improvement over the \acrlong{is}. Unlike the \acrlong{is}, the \acrlong{fid} metric measures the distance between the learned data distribution and the true distribution. It does so by computing the Frechét distance between Inception encodings of the true data distribution and the fake data distribution.
 

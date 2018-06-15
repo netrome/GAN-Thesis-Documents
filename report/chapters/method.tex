@@ -3,7 +3,7 @@ In this chapter, the methods employed to answer the proposed question are presen
 
 The level of detail presented here should suffice for re-implementing the algorithms and repeat the experiments of this project. There certainly exist questions which need more details to answer than what can possibly be captured in a report like this. For further details that allows replicating the experiments, the original implementation is available online\footnote{The code is available at: \url{www.github.com/netrome/DeepGeneration}}.
 
-\section{Pupil Localization}
+\section{Pupil localization}
 \begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{images/misc/pupil-localization.pdf}
@@ -65,7 +65,7 @@ The default generator architecture is outlined in table \ref{tab:generator}. The
 
 The encoder follows the structure of the discriminator but does not use minibatch discrimination, and the output shape is adjusted to the size of the latent space instead of producing a scalar output. 
 
-The transformer is only used for Pupil Localization and is an image-to-image network. The structure of the transformer is shown in table \ref{tab:transformer}. The main structure resembles that of \textcite{ronneberger2015u}, but many details are different. 
+The transformer is only used for pupil localization and is an image-to-image network. The structure of the transformer is shown in table \ref{tab:transformer}. The main structure resembles that of \textcite{ronneberger2015u}, but many details are different. 
 %\todocomment{is it worth discussing those differences?} - No /M
 
 %...relevant network architectures are described here, together with figures and stuff. Base it around GAN networks, the small differences in the encoders can be explained afterwards.
@@ -205,7 +205,7 @@ As in the original article, feature normalization, minibatch discrimination and 
 \end{figure}
 
 \section{\acrlong{aegan}}
-The final method tested in this project is based on a novel combination of autoencoders and \acrshort{gans}, named the \acrfull{aegan}. The proposed method consists of simultaneuously training a denoising autoencoder and a \acrshort{gan}, using the same network as generator and decoder. This is illustrated in figure \ref{fig:aegan}. The idea is conceptually similar to the \acrshort{vaegan} framework \parencite{LarsenSW15autoencodingbeyond}. There are two major differences between this method and the VAEGAN framework. First and foremost the autoencoder trained in this method is deterministic and trained with the mean squared error loss function. Secondly, the adversarial loss is not used to train the autoencoder, but instead a normal GAN is trained separately from the autoencoder but with the decoder network as the generator. 
+The final method tested in this project is based on a novel combination of autoencoders and \acrshort{gans}, named the \acrfull{aegan}. The proposed method consists of simultaneuously training a denoising autoencoder and a \acrshort{gan}, using the same network as generator and decoder. This is illustrated in figure \ref{fig:aegan}. The idea is conceptually similar to the \acrshort{vaegan} framework \parencite{LarsenSW15autoencodingbeyond}. There are two major differences between this method and the VAEGAN framework. First and foremost the autoencoder trained in this method is deterministic and trained with the mean squared error loss function. Secondly, the adversarial loss is not used directly to train the autoencoder, but instead a normal GAN is trained separately from the autoencoder but with the decoder network as the generator. 
 
 Given enough capacity in the generator and encoder, the global minimum for the autoencoder training in this setting corresponds to the autoencoder learning the identity mapping. This causes the generator to generate realistic images on the points in the latent space the autoencoder maps the original data onto. The optimal generator in the \acrshort{gan} framework maps the entire latent space to realistic images. From this point of view the two objectives should lead to the same solution, however \acrshort{gans} tend to suffer from mode collapse and autoencoders often produce poor samples in terms of visual quality. Therefore if this method converges, it should force the decoded images to be sharp and the generator to capture the entire training data distribution. 
 %\todocomment{I think that this paragraph is a bit wordy and is hard to follow. You could maybe improve it by adding a diagram to help illustrate the relationships between the encoder, decoder and GAN with respect to the latent space as well as contrasting it with VAEGAN. It is also worth stressing that this is a unique contribution if you haven't already done so already.}
