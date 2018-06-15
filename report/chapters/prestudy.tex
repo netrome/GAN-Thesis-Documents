@@ -90,7 +90,7 @@ A straightforward implication of this is that when $G$ is optimal, the optimal $
 \end{equation}
 if $D$ and $G$ are optimal. It is also proved in the original paper that given an optimal discriminator there exists a global minimum of the discriminator value function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is also proven.
 
-This means that one can observe convergence when training \acrshort{gans} by following the development of the discriminator output. When it saturates at $0.5$ for all generator samples and real samples the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
+This means that one can observe convergence when training \acrshort{gans} by following the development of the discriminator output. When it saturates at $0.5$ for all generator samples and real samples, the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
 
 \subsection{Practical issues}
 The theoretical properties indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing these models in practice some issues emerge from using models of finite capacity. 
