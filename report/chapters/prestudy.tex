@@ -1,8 +1,7 @@
-This chapter begins by establishing the notation and the concepts encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by more detailed descriptions of the families of generative modells considered in this project. Special emphasis is put on \acrlong{gans} and its variants.
+This chapter begins by establishing the notation and the concepts encountered in this chapter. Thereafter a brief overview of generative models is provided. This is followed by more detailed descriptions of the families of generative models considered in this project. Special emphasis is put on \acrlong{gans} and its variants.
 
 \section{Concepts and terminology}
-%This chapter deals with high dimensional spaces (written in mathcal, $\mathcal{Z}$), stochastic variables (written in uppercase $Z$), sets (alsa mathcal), vectors (written as plain variables $z$) and probability distributions (reserving the letter $p$ for this, using indexes to distinguish different distributions).
-This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and sets are written in mathcal ($\mathcal{Z}$), stochastic variables are written as uppercase letters ($Z$), vectors are written as lower case letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions. 
+This chapter deals with high dimensional spaces, stochastic variables, sets, vectors and probability distributions. Spaces and sets are written in a calligraphic style ($\mathcal{Z}$), stochastic variables (and vectors) are written as uppercase letters ($Z$), vectors are written as lowercase letters ($z$) and the letter $p$ is reserved for probabilities and probability distributions. 
 
 \section{Generative models}
 \begin{figure}[t]
@@ -11,9 +10,9 @@ This chapter deals with high dimensional spaces, stochastic variables, sets, vec
     \caption{The directed graphical model representing the dependency between the latent variable $Z$ and the data variable $X$ in \acrshort{gans}. This is the same dependency structure as in GMMs and \acrshort{vaes}. The color coding is consistent with that of \textcite{christopher2016pattern}, where colored cells represent latent variables and non-colored cells are observable variables. The arrow represents a causal dependency.}
     \label{fig:GANgraph}
 \end{figure}
-In this thesis, the term generative model refers to models that explicitly or implicitly represent the data distribution thereby allowing sampling from the modelled distribution. This is different from discriminative models which only model information that can be extracted from the data. 
+In this thesis, the term generative model refers to models that explicitly or implicitly represent a data distribution, thereby allowing sampling from the modeled distribution. This is different from discriminative models which only model information that can be extracted from the data. 
 
-This thesis focuses on parametric generative models which can be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The attention of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these assume a dependency between a latent variable $Z$ and an observed variable $X$ according to figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
+This thesis focuses on parametric generative models which can be formulated as instances of probabilistic graphical models \parencite{christopher2016pattern}. Examples of these include Gaussian Mixture Models (GMMs), Hidden Markov models (HMMs), \acrfull{gans} and \acrfull{vaes}. The focus of this work is directed towards models that are applicable on large, high-dimensional and complex data sets. The known models with these properties are  \acrshort{gans} and \acrshort{vaes}. Both of these models assume a dependency between a latent variable $Z$ and an observed variable $X$ as shown in Figure \ref{fig:GANgraph}. The rest of this chapter provides a more in-depth description of these models. 
 
 %Write short state of generative models. Boltzmann machine, explicit models, variational autoencoders etc...
 
@@ -26,15 +25,15 @@ This thesis focuses on parametric generative models which can be formulated as i
     \label{fig:GAN}
 \end{figure}
 
-\acrfull{gans} are a family of generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $\dataspace$, a latent space $\latentspace$ and two neural networks, a generator $G(z)$ and a discriminator $D(x)$ (figure \ref{fig:GAN}). The generator maps elements of $\latentspace$ to $\dataspace$, $G: \latentspace \rightarrow \dataspace$. The discriminator is a binary classifier $D: \dataspace \rightarrow [0, 1]$. 
+\acrfull{gans} are a family of generative models proposed by \textcite{goodfellow2014generative}. The framework for training \acrshort{gans} consists of a data set $\dataset$ with elements in a domain $\dataspace$, a latent space $\latentspace$ and two neural networks, a generator $G(z)$ and a discriminator $D(x)$ (Figure \ref{fig:GAN}). The generator maps elements of $\latentspace$ to $\dataspace$, that is $G: \latentspace \rightarrow \dataspace$. The discriminator is a binary classifier $D: \dataspace \rightarrow [0, 1]$. 
 
 The objective of the discriminator is to classify elements in $\dataspace$ as either members or not members of $\dataset$. Members of $\dataset$ are usually referred to as real samples since they are part of the data set, and non-members are referred to as fake samples. The objective of the generator is to fool the discriminator by mapping elements in $\latentspace$ to the subspace of $\dataspace$ that is classified as real. 
 
 The generator can be viewed as representing a probability distribution $p_G$ on $\dataspace$. By introducing a latent random variable $Z$ with the probability distribution $p_Z$ on $\latentspace$, the generator probability distribution can be expressed as $p_G(x) = p_Z(G^{-1}(x))$. 
 
-In practice $G^{-1}$ is intractable to compute, whereby explicit probabilities are seldom acquired through \acrshort{gans}. However, this formulation allows sampling from the learned distribution as $G(z), z \sim p_Z$ is straightforward to compute. 
+In practice $G^{-1}$ is intractable to compute, and therefore explicit probabilities are seldom acquired through \acrshort{gans}. However, this formulation allows sampling from the learned distribution as $G(z), z \sim p_Z$, is straightforward to compute. 
 
-The goal of training \acrshort{gans} is to learn a probability distribution over the data. By viewing the elements of $\dataset$ as outcomes of a random variable $S$ with probability distribution $p_S$ the goal of the generator is to approximate this distribution with $p_G$, and the goal of the discriminator is to discriminate between these distributions. Using this formulation the objective of the \acrshort{gan} training can be formulated as a minimax game 
+The goal of training \acrshort{gans} is to implicitly learn a probability distribution over the data. By viewing the elements of $\dataset$ as outcomes of a random variable $S$ with probability distribution $p_S$ the goal of the generator is to approximate this distribution with $p_G$, and the goal of the discriminator is to discriminate between these distributions. Using this formulation the objective of the \acrshort{gan} training can be formulated as a minimax game 
 \begin{equation}
     \min_G \max_D V^{D}(G, D)
 \end{equation}
@@ -54,24 +53,24 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
 
 
 \begin{algorithm}
-    \caption{Training scheme for \acrlong{gans} using minibatch stochastic gradient based optimization and $n_D$ discriminator updates per generator update. $\theta_D$ denotes the discriminator parameters and $\theta_G$ denotes the generator parameters.}
+    \caption{Training scheme for \acrlong{gans} using minibatch stochastic gradient descent and $n_D$ discriminator updates per generator update. $\theta_D$ denotes the discriminator parameters and $\theta_G$ denotes the generator parameters. $\lambda$ is the learning rate.}
     \label{alg:GANbase}
     \begin{algorithmic}[1]
         \FOR{number of iterations}
-        \FOR{$n_D$ steps do}
+        \FOR{$n_D$ steps}
         \STATE Sample minibatch of fake data $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
         \STATE Sample minibatch of real data $\{x_{1}, ..., x_{m}\} \sim p_S(x)$.
         \STATE Update discriminator parameters with the estimated gradient of the value function
         \begin{equation}
             \nonumber
-            \nabla_{\theta_D} \left( \frac{1}{m}\sum_{i=1}^m\log(D(x_i)) + \log(1-D(x_{fi})) \right).
+            \theta_D \leftarrow \theta_D + \lambda \nabla_{\theta_D} \left( \frac{1}{m}\sum_{i=1}^m\log(D(x_i)) + \log(1-D(x_{fi})) \right).
         \end{equation}
         \ENDFOR
         \STATE Sample minibatch of fake images $\{x_{f1}, ..., x_{fm}\} \sim p_G(x)$.
         \STATE Update generator parameters with the estimated gradient of the negative value function
         \begin{equation}
             \nonumber
-            \nabla_{\theta_G} \left( - \frac{1}{m}\sum_{i=1}^m\log(1-D(x_{fi})) \right).
+            \theta_G \leftarrow \theta_G - \lambda \nabla_{\theta_G} \left(\frac{1}{m}\sum_{i=1}^m\log(1-D(x_{fi})) \right).
         \end{equation}
         \ENDFOR
     \end{algorithmic}
@@ -79,32 +78,32 @@ where $x_i$ is sampled from $p(x)$. This process is described in an algorithmic 
 
 
 \subsection{Theoretical properties of \acrshort{gans}}
-In the original paper (\textcite{goodfellow2014generative}) a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity.
+In the original paper (\textcite{goodfellow2014generative}) a couple of theoretical properties of \acrshort{gans} are formulated and proved. These proofs assume that both the generator and discriminator have infinite capacity, meaning that they can model all possible mappings between the domains.
 
-Firstly it is proven that given a fixed generator $G$ the optimal discriminator is 
+It is proven that given a fixed generator $G$ the optimal discriminator is 
 \begin{equation}
     D(x) = \frac{p_S(X=x)}{p_S(X=x) + p_G(X=x)}.
 \end{equation}
-A straightforward implication of this is that when $G$ is optimal, the optimal $D$ always output $0.5$ for all real and fake data points. In other words
+A straightforward implication of this is that when $G$ is optimal, the optimal $D$ maps all possible inputs onto the value $0.5$. In other words
 \begin{equation}
     p_G \eqdist p_S \implies D(x) = 0.5 \; \forall x \sim p_G, p_S
 \end{equation}
-if $D$ and $G$ are optimal. Secondly, it is also proved in the original paper that given an optimal discriminator there exists a global maximum of the discriminator cost function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is also proven.
+if $D$ and $G$ are optimal. It is also proved in the original paper that given an optimal discriminator there exists a global minimum of the discriminator value function and it is reached if and only if $p_G \eqdist p_S$. Finally convergence of the training algorithm (Algorithm \ref{alg:GANbase}) is also proven.
 
-This means that one can observe convergence when training \acrshort{gans} by observing the discriminator output. When it saturates at $0.5$ for all generator samples and real samples the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
+This means that one can observe convergence when training \acrshort{gans} by following the development of the discriminator output. When it saturates at $0.5$ for all generator samples and real samples the algorithm has converged. In practice it is difficult to get to this point with complex sets of high-dimensional data.
 
 \subsection{Practical issues}
 The theoretical properties indicate that \acrshort{gans} are a sensible method for implicitly learning probability distributions. However when implementing these models in practice some issues emerge from using models of finite capacity. 
 
-The two-player minimax formulation of the game results in a notoriously difficult training scenario. The update of one player may undo progress of the other player instead of moving towards Nash Equilibrium. Therefore regular gradient descent is not guaranteed to converge but can just as easily get stuck in a stale orbit \textcite{salimans2016improved}. It is also common that the generator learns to represent a subset of the original data realistically while ignoring the vast majority of the data points, thereby collapsing to a specific "mode" of the data. This phenomenon is known as mode collapse.
+The two-player minimax formulation of the game results in a notoriously difficult training scenario. The update of one player may undo progress of the other player instead of moving towards the Nash equilibrium\footer{Nash equilibrium is the point where neither the discriminator nor the generator can improve their performance by only updating their own parameters}. Therefore regular gradient descent is not guaranteed to converge but can just as easily get stuck in a stale orbit (\textcite{salimans2016improved}). It is also common that the generator learns to represent a subset of the original data realistically while ignoring the vast majority of the data points, thereby collapsing to a specific "mode" of the data. This phenomenon is known as mode collapse.
 
-Another issue encountered when implementing \acrshort{gans} in practice emerges from the limitations of representing a continous distribution with a finite data set. Even though the theoretical results guarantee $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the data set $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the data set. An example for this is using the generator as a proxy for the data set during training or evaluation of another neural network.
+Another issue encountered when implementing \acrshort{gans} emerges from the limitations of representing a continous distribution with a finite data set. Even though the theoretical results guarantee that $p_G$ converges to $p_S$, $p_S$ is not uniquely determined. In fact, $p_S$ is represented by sampling from a uniform discrete distribution over the data set $\dataset$. Therefore the optimal generator would theoretically collapse to this discrete distribution. This results in a generator incapable of generalizing to new data points. On the other hand, should this behaviour be encoutered in practice with limited capacity, the model would still be usable as a compression of the data for applications that only require sampling from the data set. An example for this is using the generator as a proxy for the data set during training or evaluation of another neural network.
  
 \subsection{Different types of \acrshort{gans}}
 Since the introduction of \acrshort{gans}, several variations and extensions have been proposed to overcome the convergence problems and stability issues of the models. The most relevant variations for this work are outlined in this section.
 
-\subsubsection{Non Saturating \acrshort{gan}} 
-An issue with training \acrshort{gans} on the original discriminator cost function (\ref{eq:GANcost}) is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. This cost is sometimes referred to as the non saturating const function.
+\subsubsection{Non-saturating \acrshort{gan}} 
+An issue with training \acrshort{gans} on the original discriminator cost function (\ref{eq:GANcost}) is that the adversarial term $\log(1-D(G(Z)))$ saturates if the discriminator is too confident, meaning that it maps fake data to values close to zero. This can prevent the generator from learning in the beginning when the generator output are quite dissimilar to the original data. In the original article it is suggested to train the generator to minimize $-\log(D(G(Z))$ instead. This cost is sometimes referred to as the non saturating cost function.
 
 The non saturating cost function preserves the fixed point dynamics of the original \acrshort{gan} formulation while at the same time permitting the generator to learn when the discriminator is confident. Due to this property, non saturating \acrshort{gans} are the implementation used for the experiments in the original article.
 
@@ -115,10 +114,10 @@ In an attempt to bring the success of \acrfull{cnns} from supervised to unsuperv
     \item Use strided convolutions instead of pooling in discriminator. Upsample with fractional-strided convolutions in generator.
     \item Apply batch normalization \parencite{ioffeS15batchnorm} in both networks.
     \item Avoid fully connected hidden layers in deeper architectures.
-    \item Use ReLU as an activation function in generator and LeakyReLU \parencite{maas2013rectifier} in the discriminator.
+    \item Use ReLU as an activation function in the generator and LeakyReLU \parencite{maas2013rectifier} in the discriminator.
 \end{itemize}
 
-Subsequent work have shown alternatives towards some of these guidelines. For an example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{salimans2016improved}. To circumvent the issues of Batch Normalization, tweaked versions of the original formulations have been proposed such as Reference Batch Normalization and Virtual Batch Normalization. Moreover it has been increasingly common to apply alternative normalization schemes, such as performing pixelwise normalization over individual feature maps \parencite{karras2017progressive}, normalizing weight tensors with their largest singular value \parencite{miyato2017spectral} and decoupling the norm and direction of weight tensors \parencite{NIPS2016weightnorm, xiang2017effects}.
+Subsequent research have shown alternatives to some of these guidelines. For example, batch normalization results in an unwanted correlation between the generated samples in a minibatch \parencite{salimans2016improved}. To circumvent the issues of Batch Normalization, tweaked versions of the original formulations have been proposed such as Reference Batch Normalization and Virtual Batch Normalization. Moreover it has been increasingly common to apply alternative normalization schemes, such as performing pixelwise normalization over individual feature maps \parencite{karras2017progressive}, normalizing weight tensors with their largest singular value \parencite{miyato2017spectral} and decoupling the norm and direction of weight tensors \parencite{NIPS2016weightnorm, xiang2017effects}.
 
 In recent \acrshort{gan} formulations, it has been increasingly common to apply the LeakyReLU activation function in both networks and not just in the discriminator. 
 
